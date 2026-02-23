@@ -13,7 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Loader2, Lock } from 'lucide-react';
+import { Lock } from 'lucide-react';
 
 export const ChangePasswordForm = () => {
   const { mutate: changePassword, isPending } = useChangePassword();
@@ -71,8 +71,7 @@ export const ChangePasswordForm = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isPending}>
-              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            <Button type="submit" loading={isPending}>
               Update Password
             </Button>
           </form>

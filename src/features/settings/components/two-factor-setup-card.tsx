@@ -13,7 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Loader2, ShieldCheck } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 
 export const TwoFactorSetupCard = () => {
   const { mutate: setupTwoFactor, data: setupData, isPending: isSettingUp } = useTwoFactorSetup();
@@ -41,8 +41,7 @@ export const TwoFactorSetupCard = () => {
       </CardHeader>
       <CardContent>
         {!setupData ? (
-          <Button onClick={() => setupTwoFactor()} disabled={isSettingUp}>
-            {isSettingUp && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          <Button onClick={() => setupTwoFactor()} loading={isSettingUp}>
             Enable Two-Factor Authentication
           </Button>
         ) : (
@@ -84,8 +83,7 @@ export const TwoFactorSetupCard = () => {
                     </FormItem>
                   )}
                 />
-                <Button type="submit" disabled={isConfirming}>
-                  {isConfirming && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                <Button type="submit" loading={isConfirming}>
                   Verify and Enable
                 </Button>
               </form>

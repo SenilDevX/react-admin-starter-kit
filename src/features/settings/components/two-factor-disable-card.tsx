@@ -13,7 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Loader2, ShieldOff } from 'lucide-react';
+import { ShieldOff } from 'lucide-react';
 
 export const TwoFactorDisableCard = () => {
   const { mutate: disableTwoFactor, isPending } = useDisableTwoFactor();
@@ -82,8 +82,7 @@ export const TwoFactorDisableCard = () => {
                   </FormItem>
                 )}
               />
-              <Button type="submit" variant="destructive" disabled={isPending}>
-                {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              <Button type="submit" variant="destructive" loading={isPending}>
                 Disable Two-Factor Authentication
               </Button>
             </form>

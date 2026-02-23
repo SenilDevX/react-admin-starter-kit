@@ -19,7 +19,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Loader2, ShieldCheck } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 import type { TwoFactorSetupResponse } from '@/types';
 
 export const Onboarding2faPage = () => {
@@ -59,20 +59,21 @@ export const Onboarding2faPage = () => {
           <ShieldCheck className="h-6 w-6 text-primary" />
         </div>
         <CardTitle>Set up two-factor authentication</CardTitle>
-        <CardDescription>
-          Your account requires 2FA. Set it up to continue.
-        </CardDescription>
+        <CardDescription>Your account requires 2FA. Set it up to continue.</CardDescription>
       </CardHeader>
       <CardContent>
         {!setupData ? (
-          <Button onClick={() => setup()} disabled={isSettingUp} className="w-full">
-            {isSettingUp && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          <Button onClick={() => setup()} loading={isSettingUp} className="w-full">
             Generate QR Code
           </Button>
         ) : (
           <div className="space-y-4">
             <div className="flex justify-center">
-              <img src={setupData.qrCodeUrl} alt="QR Code" className="h-48 w-48 rounded-lg border" />
+              <img
+                src={setupData.qrCodeUrl}
+                alt="QR Code"
+                className="h-48 w-48 rounded-lg border"
+              />
             </div>
             <div className="rounded-lg bg-muted p-3 text-center">
               <p className="mb-1 text-xs text-muted-foreground">Manual entry key</p>
@@ -98,8 +99,7 @@ export const Onboarding2faPage = () => {
                     </FormItem>
                   )}
                 />
-                <Button type="submit" className="w-full" disabled={isConfirming}>
-                  {isConfirming && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                <Button type="submit" className="w-full" loading={isConfirming}>
                   Verify & Enable
                 </Button>
               </form>

@@ -14,7 +14,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Loader2, Mail } from 'lucide-react';
+import { Mail } from 'lucide-react';
 
 export const ChangeEmailForm = () => {
   const { user } = useAuthStore();
@@ -77,8 +77,7 @@ export const ChangeEmailForm = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isPending}>
-              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            <Button type="submit" loading={isPending}>
               Update Email
             </Button>
           </form>

@@ -15,7 +15,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Loader2 } from 'lucide-react';
+
 
 export const RegisterForm = () => {
   const { mutate: register, isPending } = useRegister();
@@ -91,8 +91,7 @@ export const RegisterForm = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full" disabled={isPending}>
-              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            <Button type="submit" className="w-full" loading={isPending}>
               Create account
             </Button>
           </form>

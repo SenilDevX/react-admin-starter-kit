@@ -15,7 +15,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Loader2, ArrowLeft } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 export const ForgotPasswordForm = () => {
   const { mutate: forgotPassword, isPending, isSuccess } = useForgotPassword();
@@ -70,8 +70,7 @@ export const ForgotPasswordForm = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full" disabled={isPending}>
-              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            <Button type="submit" className="w-full" loading={isPending}>
               Send reset link
             </Button>
           </form>

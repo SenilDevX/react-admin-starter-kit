@@ -18,7 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Loader2, Lock } from 'lucide-react';
+import { Lock } from 'lucide-react';
 
 export const OnboardingPasswordPage = () => {
   const navigate = useNavigate();
@@ -84,8 +84,7 @@ export const OnboardingPasswordPage = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full" disabled={isPending}>
-              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            <Button type="submit" className="w-full" loading={isPending}>
               Change password
             </Button>
           </form>

@@ -12,7 +12,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Loader2 } from 'lucide-react';
+
 
 type TodoFormProps = {
   defaultValues?: Partial<CreateTodoFormValues>;
@@ -66,8 +66,7 @@ export const TodoForm = ({
           )}
         />
         <div className="flex justify-end gap-2 pt-2">
-          <Button type="submit" disabled={isPending}>
-            {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          <Button type="submit" loading={isPending}>
             {submitLabel}
           </Button>
         </div>

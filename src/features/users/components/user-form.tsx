@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Loader2 } from 'lucide-react';
+
 
 type UserFormProps = {
   defaultValues?: Partial<CreateUserFormValues>;
@@ -129,8 +129,7 @@ export const UserForm = ({
           )}
         />
         <div className="flex justify-end gap-2 pt-2">
-          <Button type="submit" disabled={isPending}>
-            {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          <Button type="submit" loading={isPending}>
             {submitLabel}
           </Button>
         </div>

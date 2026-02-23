@@ -13,7 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { Loader2, ShieldCheck } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 
 export const TwoFactorInput = () => {
   const { mutate: verify, isPending } = useTwoFactorAuth();
@@ -59,8 +59,7 @@ export const TwoFactorInput = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full" disabled={isPending}>
-              {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            <Button type="submit" className="w-full" loading={isPending}>
               Verify
             </Button>
           </form>
