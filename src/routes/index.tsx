@@ -6,8 +6,8 @@ import { OnboardingLayout } from '@/components/layout/onboarding-layout';
 import { ProtectedRoute } from './protected-route';
 import { OnboardingGuard } from './onboarding-guard';
 import { LoadingSpinner } from '@/components/shared/loading-spinner';
+import { RouteErrorFallback } from '@/components/shared/route-error-fallback';
 
-// Lazy-loaded pages for code splitting
 const LoginPage = lazy(() =>
   import('@/features/auth/pages/login-page').then((m) => ({ default: m.LoginPage })),
 );
@@ -75,6 +75,7 @@ export const router = createBrowserRouter([
   // Public auth routes
   {
     element: <AuthLayout />,
+    errorElement: <RouteErrorFallback />,
     children: [
       { path: '/login', element: <Lazy><LoginPage /></Lazy> },
       { path: '/register', element: <Lazy><RegisterPage /></Lazy> },
@@ -87,6 +88,7 @@ export const router = createBrowserRouter([
   // Protected routes
   {
     element: <ProtectedRoute />,
+    errorElement: <RouteErrorFallback />,
     children: [
       // Onboarding routes (forced flows)
       {

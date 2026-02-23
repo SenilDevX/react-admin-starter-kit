@@ -88,7 +88,7 @@ export const UsersPage = () => {
   const prepareExportData = () => {
     if (!data?.items) return [];
     return data.items.map((user) => ({
-      Name: `${user.firstName} ${user.lastName}`,
+      Name: `${user.firstName ?? ''} ${user.lastName ?? ''}`.trim(),
       Email: user.email,
       Role: user.roleId?.name ?? 'No role',
       '2FA': user.isTwoFactorEnabled ? 'Enabled' : 'Disabled',
@@ -152,7 +152,7 @@ export const UsersPage = () => {
         open={!!deleteUser}
         onOpenChange={(open) => !open && setDeleteUser(null)}
         title="Delete User"
-        description={`Are you sure you want to delete "${deleteUser?.firstName} ${deleteUser?.lastName}"? This action cannot be undone.`}
+        description={`Are you sure you want to delete "${deleteUser?.firstName ?? ''} ${deleteUser?.lastName ?? ''}"? This action cannot be undone.`}
         confirmLabel="Delete"
         variant="destructive"
         onConfirm={handleDelete}

@@ -1,10 +1,10 @@
 import { useEffect, useRef } from 'react';
 import { authService } from '@/services/auth.service';
-import { useAuth } from './use-auth';
+import { useAuthStore } from '@/stores/auth-store';
 import { ACCESS_TOKEN_DURATION_MS, REFRESH_BUFFER_MS } from '@/lib/constants';
 
 export const useTokenRefresh = () => {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout } = useAuthStore();
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {

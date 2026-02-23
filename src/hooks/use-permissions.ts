@@ -1,9 +1,9 @@
 import { useCallback } from 'react';
-import { useAuth } from './use-auth';
+import { useAuthStore } from '@/stores/auth-store';
 import { hasPermission, canAccess } from '@/lib/permissions';
 
 export const usePermissions = () => {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
 
   const check = useCallback(
     (permission: string) => hasPermission(user, permission),

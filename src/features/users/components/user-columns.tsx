@@ -35,11 +35,11 @@ export const getUserColumns = ({ onEdit, onDelete }: UserColumnActions): ColumnD
   },
   {
     id: 'name',
-    accessorFn: (row) => `${row.firstName} ${row.lastName}`,
+    accessorFn: (row) => `${row.firstName ?? ''} ${row.lastName ?? ''}`.trim(),
     header: ({ column }) => <DataTableHeader column={column} title="Name" />,
     cell: ({ row }) => (
       <span className="max-w-[200px] truncate font-medium">
-        {row.original.firstName} {row.original.lastName}
+        {row.original.firstName ?? ''} {row.original.lastName ?? ''}
       </span>
     ),
   },

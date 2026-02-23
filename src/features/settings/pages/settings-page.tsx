@@ -1,6 +1,6 @@
 import { PageHeader } from '@/components/shared/page-header';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useAuth } from '@/hooks/use-auth';
+import { useAuthStore } from '@/stores/auth-store';
 import { ChangePasswordForm } from '../components/change-password-form';
 import { ChangeEmailForm } from '../components/change-email-form';
 import { TwoFactorSetupCard } from '../components/two-factor-setup-card';
@@ -8,7 +8,7 @@ import { TwoFactorDisableCard } from '../components/two-factor-disable-card';
 import { Lock, Mail, ShieldCheck } from 'lucide-react';
 
 export const SettingsPage = () => {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
 
   return (
     <div>

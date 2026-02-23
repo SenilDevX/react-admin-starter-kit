@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router';
-import { useAuth } from '@/hooks/use-auth';
+import { useAuthStore } from '@/stores/auth-store';
 import { ROUTES } from '@/lib/constants';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
@@ -13,12 +13,11 @@ import {
 import { Settings, LogOut } from 'lucide-react';
 
 export const UserMenu = () => {
-  const { user, logout } = useAuth();
+  const { user, logout } = useAuthStore();
   const navigate = useNavigate();
 
   if (!user) return null;
-
-  const initials = `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase();
+  const initials = `${user.firstName?.charAt(0) ?? ''}${user.lastName?.charAt(0) ?? ''}`.toUpperCase() || '?';
 
   return (
     <DropdownMenu>
@@ -32,7 +31,7 @@ export const UserMenu = () => {
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuLabel>
           <p className="text-sm font-medium">
-            {user.firstName} {user.lastName}
+            {user.firstName ?? ''} {user.lastName ?? ''}
           </p>
           <p className="text-xs text-muted-foreground">{user.email}</p>
         </DropdownMenuLabel>

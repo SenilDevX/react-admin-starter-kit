@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router';
-import { useAuth } from '@/hooks/use-auth';
+import { useAuthStore } from '@/stores/auth-store';
 import { authService } from '@/services/auth.service';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -22,7 +22,7 @@ import { Loader2, Lock } from 'lucide-react';
 
 export const OnboardingPasswordPage = () => {
   const navigate = useNavigate();
-  const { refreshProfile } = useAuth();
+  const { refreshProfile } = useAuthStore();
 
   const { mutate: changePassword, isPending } = useMutation({
     mutationFn: (data: { currentPassword: string; newPassword: string }) =>

@@ -4,19 +4,16 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { Toaster } from '@/components/ui/sonner';
 import { queryClient } from '@/lib/query-client';
-import { AuthProvider } from '@/contexts/auth-context';
-import { SidebarProvider } from '@/contexts/sidebar-context';
+import { AuthProvider } from './auth-provider';
 
 export const AppProviders = ({ children }: { children: ReactNode }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <SidebarProvider>
-          <TooltipProvider>
-            {children}
-            <Toaster position="top-right" richColors closeButton />
-          </TooltipProvider>
-        </SidebarProvider>
+        <TooltipProvider>
+          {children}
+          <Toaster position="top-right" richColors closeButton />
+        </TooltipProvider>
       </AuthProvider>
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

@@ -1,12 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
 import { useNavigate } from 'react-router';
 import { toast } from 'sonner';
-import { useAuth } from '@/hooks/use-auth';
+import { useAuthStore } from '@/stores/auth-store';
 import { ROUTES } from '@/lib/constants';
 import type { RegisterRequest } from '@/types';
 
 export const useRegister = () => {
-  const { register } = useAuth();
+  const { register } = useAuthStore();
   const navigate = useNavigate();
 
   return useMutation({

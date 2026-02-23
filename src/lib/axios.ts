@@ -1,5 +1,6 @@
 import axios, { type AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import { API_BASE_URL } from './constants';
+import { API_ENDPOINTS } from './api-endpoints';
 
 export const api = axios.create({
   baseURL: API_BASE_URL,
@@ -38,10 +39,15 @@ api.interceptors.response.use(
     }
 
     // Extract error body
-    const errorData = error.response?.data as { success: false; error: { statusCode: number; message: string | string[] } } | undefined;
+    const errorData = error.response?.data as
+      | { success: false; error: { statusCode: number; message: string | string[] } }
+      | undefined;
 
     // If 401 and not a refresh request itself, attempt silent refresh
-    if (error.response?.status === 401 && !originalRequest.url?.includes('/auth/refresh')) {
+    if (
+      error.response?.status === 401 &&
+      !originalRequest.url?.includes(API_ENDPOINTS.AUTH.REFRESH)
+    ) {
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject, config: originalRequest });
@@ -51,13 +57,13 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        await api.post('/auth/refresh');
+        await api.post(API_ENDPOINTS.AUTH.REFRESH);
         processQueue(null);
         return api(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError);
-        // Redirect to login — auth context will handle cleanup
-        window.location.href = '/login';
+        const { useAuthStore } = await import('@/stores/auth-store');
+        useAuthStore.setState({ user: null, isAuthenticated: false, isLoading: false });
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;

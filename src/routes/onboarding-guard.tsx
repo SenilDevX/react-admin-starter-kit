@@ -1,9 +1,9 @@
 import { Navigate, Outlet } from 'react-router';
-import { useAuth } from '@/hooks/use-auth';
+import { useAuthStore } from '@/stores/auth-store';
 import { ROUTES } from '@/lib/constants';
 
 export const OnboardingGuard = () => {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
 
   if (!user) return null;
 

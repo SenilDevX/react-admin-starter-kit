@@ -1,7 +1,7 @@
 export type User = {
   _id: string;
-  firstName: string;
-  lastName: string;
+  firstName: string | null;
+  lastName: string | null;
   email: string;
   isTwoFactorEnabled: boolean;
   mustChangePassword: boolean;

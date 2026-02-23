@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { changeEmailSchema, type ChangeEmailFormValues } from '@/validations/auth.schema';
 import { useChangeEmail } from '../hooks/use-change-email';
-import { useAuth } from '@/hooks/use-auth';
+import { useAuthStore } from '@/stores/auth-store';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -17,7 +17,7 @@ import {
 import { Loader2, Mail } from 'lucide-react';
 
 export const ChangeEmailForm = () => {
-  const { user } = useAuth();
+  const { user } = useAuthStore();
   const { mutate: changeEmail, isPending } = useChangeEmail();
 
   const form = useForm<ChangeEmailFormValues>({

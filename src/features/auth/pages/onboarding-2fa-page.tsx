@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { useAuth } from '@/hooks/use-auth';
+import { useAuthStore } from '@/stores/auth-store';
 import { authService } from '@/services/auth.service';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
@@ -24,7 +24,7 @@ import type { TwoFactorSetupResponse } from '@/types';
 
 export const Onboarding2faPage = () => {
   const navigate = useNavigate();
-  const { refreshProfile } = useAuth();
+  const { refreshProfile } = useAuthStore();
   const [setupData, setSetupData] = useState<TwoFactorSetupResponse | null>(null);
 
   const { mutate: setup, isPending: isSettingUp } = useMutation({
