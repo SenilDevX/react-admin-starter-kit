@@ -35,7 +35,7 @@ export const getUserColumns = ({ onEdit, onDelete }: UserColumnActions): ColumnD
     accessorFn: (row) => `${row.firstName ?? ''} ${row.lastName ?? ''}`.trim(),
     header: ({ column }) => <DataTableHeader column={column} title="Name" />,
     cell: ({ row }) => (
-      <span className="max-w-[200px] truncate font-medium">
+      <span className="max-w-50 truncate font-medium">
         {row.original.firstName ?? ''} {row.original.lastName ?? ''}
       </span>
     ),
@@ -44,9 +44,7 @@ export const getUserColumns = ({ onEdit, onDelete }: UserColumnActions): ColumnD
     accessorKey: 'email',
     header: ({ column }) => <DataTableHeader column={column} title="Email" />,
     cell: ({ row }) => (
-      <span className="max-w-[250px] truncate text-muted-foreground">
-        {row.getValue('email')}
-      </span>
+      <span className="max-w-62.5 truncate text-muted-foreground">{row.getValue('email')}</span>
     ),
   },
   {
@@ -78,10 +76,12 @@ export const getUserColumns = ({ onEdit, onDelete }: UserColumnActions): ColumnD
   {
     id: 'actions',
     cell: ({ row }) => (
-      <DataTableRowActions
-        onEdit={() => onEdit(row.original)}
-        onDelete={() => onDelete(row.original)}
-      />
+      <div className="flex justify-end">
+        <DataTableRowActions
+          onEdit={() => onEdit(row.original)}
+          onDelete={() => onDelete(row.original)}
+        />
+      </div>
     ),
   },
 ];

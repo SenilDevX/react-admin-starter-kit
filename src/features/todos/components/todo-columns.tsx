@@ -61,10 +61,12 @@ export const getTodoColumns = ({ onEdit, onDelete }: TodoColumnActions): ColumnD
   {
     id: 'actions',
     cell: ({ row }) => (
-      <DataTableRowActions
-        onEdit={() => onEdit(row.original)}
-        onDelete={() => onDelete(row.original)}
-      />
+      <div className="flex justify-end">
+        <DataTableRowActions
+          onEdit={() => onEdit(row.original)}
+          onDelete={() => onDelete(row.original)}
+        />
+      </div>
     ),
   },
 ];

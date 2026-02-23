@@ -41,7 +41,7 @@ export const getRoleColumns = ({ onEdit, onDelete }: RoleColumnActions): ColumnD
     accessorKey: 'description',
     header: 'Description',
     cell: ({ row }) => (
-      <span className="max-w-[300px] truncate text-muted-foreground">
+      <span className="max-w-75 truncate text-muted-foreground">
         {row.getValue('description') || '\u2014'}
       </span>
     ),
@@ -113,10 +113,12 @@ export const getRoleColumns = ({ onEdit, onDelete }: RoleColumnActions): ColumnD
     cell: ({ row }) => {
       const role = row.original;
       return (
-        <DataTableRowActions
-          onEdit={() => onEdit(role)}
-          onDelete={role.isSystem ? undefined : () => onDelete(role)}
-        />
+        <div className="flex justify-end">
+          <DataTableRowActions
+            onEdit={() => onEdit(role)}
+            onDelete={role.isSystem ? undefined : () => onDelete(role)}
+          />
+        </div>
       );
     },
   },

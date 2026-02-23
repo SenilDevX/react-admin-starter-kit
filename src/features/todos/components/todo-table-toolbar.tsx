@@ -23,6 +23,7 @@ type TodoTableToolbarProps = {
   activeFilterCount: number;
   onExportCSV: () => void;
   onExportXLSX: () => void;
+  onRefresh?: () => void;
 };
 
 export const TodoTableToolbar = ({
@@ -34,12 +35,14 @@ export const TodoTableToolbar = ({
   activeFilterCount,
   onExportCSV,
   onExportXLSX,
+  onRefresh,
 }: TodoTableToolbarProps) => {
   return (
     <DataTableToolbar
       searchValue={search}
       onSearchChange={onSearchChange}
       searchPlaceholder="Search todos..."
+      onRefresh={onRefresh}
     >
       <DataTableFilter
         fields={statusFilterFields}

@@ -14,6 +14,7 @@ type UserTableToolbarProps = {
   activeFilterCount: number;
   onExportCSV: () => void;
   onExportXLSX: () => void;
+  onRefresh?: () => void;
 };
 
 export const UserTableToolbar = ({
@@ -25,6 +26,7 @@ export const UserTableToolbar = ({
   activeFilterCount,
   onExportCSV,
   onExportXLSX,
+  onRefresh,
 }: UserTableToolbarProps) => {
   const { data: rolesData } = useQuery({
     queryKey: QUERY_KEYS.roles({}),
@@ -47,6 +49,7 @@ export const UserTableToolbar = ({
       searchValue={search}
       onSearchChange={onSearchChange}
       searchPlaceholder="Search users..."
+      onRefresh={onRefresh}
     >
       <DataTableFilter
         fields={roleFilterFields}

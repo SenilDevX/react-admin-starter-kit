@@ -42,7 +42,7 @@ export const RolesPage = () => {
     [page, limit, debouncedSearch],
   );
 
-  const { data, isLoading } = useRoles(queryParams);
+  const { data, isLoading, refetch } = useRoles(queryParams);
 
   const columns = useMemo(
     () =>
@@ -118,6 +118,7 @@ export const RolesPage = () => {
               setPage(1);
             }}
             searchPlaceholder="Search roles..."
+            onRefresh={refetch}
           >
             <DataTableExport
               onExportCSV={() => exportToCSV(prepareExportData(), 'roles')}

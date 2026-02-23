@@ -29,7 +29,7 @@ export const AuditsPage = () => {
     [page, limit, debouncedSearch, filters],
   );
 
-  const { data, isLoading } = useAudits(queryParams);
+  const { data, isLoading, refetch } = useAudits(queryParams);
 
   const columns = useMemo(
     () =>
@@ -98,6 +98,7 @@ export const AuditsPage = () => {
             activeFilterCount={activeFilterCount}
             onExportCSV={() => exportToCSV(prepareExportData(), 'audit-logs')}
             onExportXLSX={() => exportToXLSX(prepareExportData(), 'audit-logs')}
+            onRefresh={refetch}
           />
         }
       />

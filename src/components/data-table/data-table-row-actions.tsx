@@ -1,4 +1,4 @@
-import { MoreHorizontal, Pencil, Trash2, Eye } from 'lucide-react';
+import { Ellipsis, Pencil, Trash2, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -18,32 +18,33 @@ export const DataTableRowActions = ({ onView, onEdit, onDelete }: DataTableRowAc
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-8 w-8">
-          <MoreHorizontal className="h-4 w-4" />
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-7 w-7 data-[state=open]:bg-muted"
+        >
+          <Ellipsis className="h-3.5 w-3.5" />
           <span className="sr-only">Open menu</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="end" className="w-32 text-xs">
         {onView && (
-          <DropdownMenuItem onClick={onView}>
-            <Eye className="mr-2 h-4 w-4" />
+          <DropdownMenuItem onSelect={onView} className="text-xs [&_svg]:size-3.5">
+            <Eye />
             View
           </DropdownMenuItem>
         )}
         {onEdit && (
-          <DropdownMenuItem onClick={onEdit}>
-            <Pencil className="mr-2 h-4 w-4" />
+          <DropdownMenuItem onSelect={onEdit} className="text-xs [&_svg]:size-3.5">
+            <Pencil />
             Edit
           </DropdownMenuItem>
         )}
         {onDelete && (
           <>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={onDelete}
-              className="text-destructive focus:text-destructive"
-            >
-              <Trash2 className="mr-2 h-4 w-4" />
+            <DropdownMenuItem variant="destructive" onSelect={onDelete} className="text-xs [&_svg]:size-3.5">
+              <Trash2 />
               Delete
             </DropdownMenuItem>
           </>

@@ -43,7 +43,7 @@ export const UsersPage = () => {
     [page, limit, debouncedSearch, filters],
   );
 
-  const { data, isLoading } = useUsers(queryParams);
+  const { data, isLoading, refetch } = useUsers(queryParams);
 
   const columns = useMemo(
     () =>
@@ -135,6 +135,7 @@ export const UsersPage = () => {
             activeFilterCount={activeFilterCount}
             onExportCSV={() => exportToCSV(prepareExportData(), 'users')}
             onExportXLSX={() => exportToXLSX(prepareExportData(), 'users')}
+            onRefresh={refetch}
           />
         }
         bulkActions={

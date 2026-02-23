@@ -32,6 +32,7 @@ type AuditTableToolbarProps = {
   activeFilterCount: number;
   onExportCSV: () => void;
   onExportXLSX: () => void;
+  onRefresh?: () => void;
 };
 
 export const AuditTableToolbar = ({
@@ -43,12 +44,14 @@ export const AuditTableToolbar = ({
   activeFilterCount,
   onExportCSV,
   onExportXLSX,
+  onRefresh,
 }: AuditTableToolbarProps) => {
   return (
     <DataTableToolbar
       searchValue={search}
       onSearchChange={onSearchChange}
       searchPlaceholder="Search by user name..."
+      onRefresh={onRefresh}
     >
       <DataTableFilter
         fields={auditFilterFields}

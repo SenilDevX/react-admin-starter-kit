@@ -43,7 +43,7 @@ export const TodosPage = () => {
     [page, limit, debouncedSearch, filters],
   );
 
-  const { data, isLoading } = useTodos(queryParams);
+  const { data, isLoading, refetch } = useTodos(queryParams);
 
   const columns = useMemo(
     () =>
@@ -134,6 +134,7 @@ export const TodosPage = () => {
             activeFilterCount={activeFilterCount}
             onExportCSV={() => exportToCSV(prepareExportData(), 'todos')}
             onExportXLSX={() => exportToXLSX(prepareExportData(), 'todos')}
+            onRefresh={refetch}
           />
         }
         bulkActions={
