@@ -20,14 +20,14 @@ export const getAuditColumns = ({ onView }: AuditColumnActions): ColumnDef<Audit
     accessorKey: 'userName',
     header: ({ column }) => <DataTableHeader column={column} title="User Name" />,
     cell: ({ row }) => (
-      <span className="max-w-[200px] truncate font-medium">{row.getValue('userName')}</span>
+      <span className="max-w-50 truncate font-medium">{row.getValue('userName')}</span>
     ),
   },
   {
     accessorKey: 'userEmail',
     header: 'Email',
     cell: ({ row }) => (
-      <span className="max-w-[250px] truncate text-muted-foreground">
+      <span className="max-w-62.5 truncate text-muted-foreground">
         {row.getValue('userEmail')}
       </span>
     ),

@@ -82,7 +82,6 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       }),
       onRehydrateStorage: () => (state) => {
         if (state) {
-          // After hydration: only keep loading if we need to validate with server
           useAuthStore.setState({
             hasHydrated: true,
             isLoading: state.isAuthenticated,
