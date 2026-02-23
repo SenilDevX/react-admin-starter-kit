@@ -7,6 +7,7 @@ import {
   type SortingState,
   type RowSelectionState,
   type VisibilityState,
+  type OnChangeFn,
 } from '@tanstack/react-table';
 import { useState } from 'react';
 import {
@@ -18,6 +19,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { DataTablePagination } from './data-table-pagination';
+import { DataTableColumnCustomizer } from './data-table-column-customizer';
 import { EmptyState } from '@/components/shared/empty-state';
 import { TableSkeleton } from '@/components/shared/loading-skeleton';
 import type { ReactNode } from 'react';
@@ -32,11 +34,12 @@ type PaginationData = {
 type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  getRowId?: (row: TData) => string;
   pagination?: PaginationData;
   onPageChange?: (page: number) => void;
   onLimitChange?: (limit: number) => void;
   isLoading?: boolean;
-  toolbar?: ReactNode;
+  toolbar?: ReactNode | ((columnCustomizer: ReactNode) => ReactNode);
   bulkActions?: ReactNode;
   rowSelection?: RowSelectionState;
   onRowSelectionChange?: (selection: RowSelectionState) => void;
@@ -45,11 +48,15 @@ type DataTableProps<TData, TValue> = {
   onRowClick?: (row: TData) => void;
   emptyTitle?: string;
   emptyDescription?: string;
+  hasActiveFilters?: boolean;
+  sorting?: SortingState;
+  onSortingChange?: OnChangeFn<SortingState>;
 };
 
 export const DataTable = <TData, TValue>({
   columns,
   data,
+  getRowId,
   pagination,
   onPageChange,
   onLimitChange,
@@ -63,20 +70,26 @@ export const DataTable = <TData, TValue>({
   onRowClick,
   emptyTitle,
   emptyDescription,
+  hasActiveFilters,
+  sorting: controlledSorting,
+  onSortingChange,
 }: DataTableProps<TData, TValue>) => {
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [internalSorting, setInternalSorting] = useState<SortingState>([]);
   const [internalRowSelection, setInternalRowSelection] = useState<RowSelectionState>({});
   const [internalColumnVisibility, setInternalColumnVisibility] = useState<VisibilityState>({});
 
+  const isServerSideSort = !!onSortingChange;
+  const sorting = controlledSorting ?? internalSorting;
   const rowSelection = controlledRowSelection ?? internalRowSelection;
   const columnVisibility = controlledColumnVisibility ?? internalColumnVisibility;
 
   const table = useReactTable({
     data,
     columns,
+    ...(getRowId && { getRowId }),
     getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    onSortingChange: setSorting,
+    ...(isServerSideSort ? { manualSorting: true } : { getSortedRowModel: getSortedRowModel() }),
+    onSortingChange: onSortingChange ?? setInternalSorting,
     onRowSelectionChange: onRowSelectionChange
       ? (updater) => {
           const newSelection = typeof updater === 'function' ? updater(rowSelection) : updater;
@@ -100,9 +113,11 @@ export const DataTable = <TData, TValue>({
 
   const selectedCount = Object.keys(rowSelection).length;
 
+  const columnCustomizer = <DataTableColumnCustomizer table={table} />;
+
   return (
     <div>
-      {toolbar}
+      {typeof toolbar === 'function' ? toolbar(columnCustomizer) : toolbar}
 
       {selectedCount > 0 && bulkActions}
 
@@ -112,7 +127,14 @@ export const DataTable = <TData, TValue>({
             <TableSkeleton />
           </div>
         ) : data.length === 0 ? (
-          <EmptyState title={emptyTitle} description={emptyDescription} />
+          hasActiveFilters ? (
+            <EmptyState
+              title="No results found"
+              description="Try adjusting your search or filters."
+            />
+          ) : (
+            <EmptyState title={emptyTitle} description={emptyDescription} />
+          )
         ) : (
           <Table>
             <TableHeader>
@@ -133,8 +155,16 @@ export const DataTable = <TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
-                  className={onRowClick ? 'cursor-pointer' : undefined}
+                  className={onRowClick ? 'cursor-pointer focus-visible:bg-muted/50 focus-visible:outline-none' : undefined}
+                  tabIndex={onRowClick ? 0 : undefined}
+                  role={onRowClick ? 'button' : undefined}
                   onClick={onRowClick ? () => onRowClick(row.original) : undefined}
+                  onKeyDown={onRowClick ? (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      onRowClick(row.original);
+                    }
+                  } : undefined}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

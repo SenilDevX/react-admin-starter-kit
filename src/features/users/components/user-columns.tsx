@@ -35,6 +35,7 @@ export const getUserColumns = ({ onEdit, onDelete, onToggle2FA }: UserColumnActi
     id: 'name',
     accessorFn: (row) => `${row.firstName ?? ''} ${row.lastName ?? ''}`.trim(),
     header: ({ column }) => <DataTableHeader column={column} title="Name" />,
+    meta: { label: 'Name' },
     cell: ({ row }) => {
       const name = `${row.original.firstName ?? ''} ${row.original.lastName ?? ''}`.trim();
       return <span className="max-w-50 truncate font-medium">{name || '—'}</span>;
@@ -43,6 +44,7 @@ export const getUserColumns = ({ onEdit, onDelete, onToggle2FA }: UserColumnActi
   {
     accessorKey: 'email',
     header: ({ column }) => <DataTableHeader column={column} title="Email" />,
+    meta: { label: 'Email' },
     cell: ({ row }) => (
       <span className="max-w-62.5 truncate text-muted-foreground">
         {row.getValue('email') || '—'}
@@ -52,15 +54,19 @@ export const getUserColumns = ({ onEdit, onDelete, onToggle2FA }: UserColumnActi
   {
     id: 'role',
     accessorFn: (row) => row.roleId?.name ?? '—',
-    header: ({ column }) => <DataTableHeader column={column} title="Role" />,
+    header: 'Role',
+    meta: { label: 'Role' },
     cell: ({ row }) => (
       <span className="text-muted-foreground">{row.original.roleId?.name ?? '—'}</span>
     ),
+    enableSorting: false,
   },
   {
     id: 'twoFactor',
     accessorFn: (row) => row.isTwoFactorEnabled,
     header: '2FA',
+    meta: { label: '2FA' },
+    enableSorting: false,
     cell: ({ row }) => (
       <Switch
         size="sm"
@@ -72,6 +78,7 @@ export const getUserColumns = ({ onEdit, onDelete, onToggle2FA }: UserColumnActi
   {
     accessorKey: 'createdAt',
     header: ({ column }) => <DataTableHeader column={column} title="Created" />,
+    meta: { label: 'Created' },
     cell: ({ row }) => (
       <span className="text-muted-foreground">
         {formatDateTime(row.getValue('createdAt')) || '—'}

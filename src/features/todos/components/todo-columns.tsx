@@ -33,6 +33,7 @@ export const getTodoColumns = ({ onEdit, onDelete }: TodoColumnActions): ColumnD
   {
     accessorKey: 'title',
     header: ({ column }) => <DataTableHeader column={column} title="Title" />,
+    meta: { label: 'Title' },
     cell: ({ row }) => (
       <span className="max-w-75 truncate font-medium">{row.getValue('title')}</span>
     ),
@@ -40,20 +41,24 @@ export const getTodoColumns = ({ onEdit, onDelete }: TodoColumnActions): ColumnD
   {
     accessorKey: 'description',
     header: 'Description',
+    meta: { label: 'Description' },
     cell: ({ row }) => (
       <span className="max-w-100 truncate text-muted-foreground">
         {row.getValue('description') || '—'}
       </span>
     ),
+    enableSorting: false,
   },
   {
     accessorKey: 'status',
     header: ({ column }) => <DataTableHeader column={column} title="Status" />,
+    meta: { label: 'Status' },
     cell: ({ row }) => <TodoStatusBadge status={row.getValue('status')} />,
   },
   {
     accessorKey: 'createdAt',
     header: ({ column }) => <DataTableHeader column={column} title="Created" />,
+    meta: { label: 'Created' },
     cell: ({ row }) => (
       <span className="text-muted-foreground">{formatDateTime(row.getValue('createdAt'))}</span>
     ),

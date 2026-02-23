@@ -3,8 +3,6 @@ import type { RowSelectionState } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
 import { PageHeader } from '@/components/shared/page-header';
 import { DataTable } from '@/components/data-table/data-table';
-import { DataTableToolbar } from '@/components/data-table/data-table-toolbar';
-import { DataTableExport } from '@/components/data-table/data-table-export';
 import { DataTableBulkActions } from '@/components/data-table/data-table-bulk-actions';
 import { ConfirmDialog } from '@/components/shared/confirm-dialog';
 import { PermissionGate } from '@/components/shared/permission-gate';
@@ -12,10 +10,12 @@ import { Button } from '@/components/ui/button';
 import { useRoles } from '../hooks/use-roles';
 import { useDeleteRole } from '../hooks/use-role-mutations';
 import { getRoleColumns } from '../components/role-columns';
+import { RoleTableToolbar } from '../components/role-table-toolbar';
 import { RoleCreateDialog } from '../components/role-create-dialog';
 import { RoleEditDialog } from '../components/role-edit-dialog';
 import { usePagination } from '@/hooks/use-pagination';
 import { useDebounce } from '@/hooks/use-debounce';
+import { useSorting } from '@/hooks/use-sorting';
 import { exportToCSV, exportToXLSX } from '@/lib/export';
 import { formatDateTime } from '@/lib/format';
 import type { Role } from '@/types';
@@ -24,7 +24,9 @@ export const RolesPage = () => {
   const { page, limit, setPage, setLimit } = usePagination();
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search);
+  const [filters, setFilters] = useState<Record<string, string>>({});
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const { sorting, setSorting, sortBy, sortOrder } = useSorting();
 
   // Dialog states
   const [createOpen, setCreateOpen] = useState(false);
@@ -37,21 +39,38 @@ export const RolesPage = () => {
     () => ({
       page,
       limit,
-      ...(debouncedSearch && { search: debouncedSearch }),
+      ...(debouncedSearch && { s: debouncedSearch }),
+      ...(filters.isActive && { isActive: filters.isActive }),
+      ...(sortBy && { sortBy, sortOrder }),
     }),
-    [page, limit, debouncedSearch],
+    [page, limit, debouncedSearch, filters, sortBy, sortOrder],
   );
 
-  const { data, isLoading, refetch } = useRoles(queryParams);
+  const { data, isLoading, isFetching, refetch } = useRoles(queryParams);
 
   const columns = useMemo(
     () =>
       getRoleColumns({
-        onEdit: (role) => setEditRole(role),
-        onDelete: (role) => setDeleteRole(role),
+        onEdit: setEditRole,
+        onDelete: setDeleteRole,
       }),
-    [],
+    [setEditRole, setDeleteRole],
   );
+
+  const handleFilterChange = useCallback(
+    (key: string, value: string) => {
+      setFilters((prev) => ({ ...prev, [key]: value }));
+      setPage(1);
+    },
+    [setPage],
+  );
+
+  const handleFilterClear = useCallback(() => {
+    setFilters({});
+    setPage(1);
+  }, [setPage]);
+
+  const activeFilterCount = Object.values(filters).filter(Boolean).length;
 
   const handleDelete = () => {
     if (!deleteRole) return;
@@ -62,13 +81,13 @@ export const RolesPage = () => {
 
   const handleBulkDelete = useCallback(() => {
     const selectedIds = Object.keys(rowSelection);
-    if (!data?.items) return;
-    const rolesToDelete = data.items.filter(
-      (_, index) => selectedIds.includes(String(index)) && !_.isSystem,
-    );
-    Promise.all(rolesToDelete.map((role) => removeRole(role._id))).then(() => {
-      setRowSelection({});
-    });
+    if (selectedIds.length === 0 || !data?.items) return;
+    const systemIds = new Set(data.items.filter((r) => r.isSystem).map((r) => r._id));
+    const idsToDelete = selectedIds.filter((id) => !systemIds.has(id));
+    if (idsToDelete.length === 0) return;
+    Promise.all(idsToDelete.map((id) => removeRole(id)))
+      .then(() => setRowSelection({}))
+      .catch(() => {});
   }, [rowSelection, data, removeRole]);
 
   const prepareExportData = useCallback(() => {
@@ -98,6 +117,7 @@ export const RolesPage = () => {
       <DataTable
         columns={columns}
         data={data?.items ?? []}
+        getRowId={(row) => row._id}
         isLoading={isLoading}
         pagination={
           data
@@ -108,24 +128,29 @@ export const RolesPage = () => {
         onLimitChange={setLimit}
         rowSelection={rowSelection}
         onRowSelectionChange={setRowSelection}
+        sorting={sorting}
+        onSortingChange={setSorting}
         emptyTitle="No roles found"
         emptyDescription="Get started by creating your first role."
-        toolbar={
-          <DataTableToolbar
-            searchValue={search}
+        hasActiveFilters={!!debouncedSearch || activeFilterCount > 0}
+        toolbar={(columnCustomizer) => (
+          <RoleTableToolbar
+            search={search}
             onSearchChange={(val) => {
               setSearch(val);
               setPage(1);
             }}
-            searchPlaceholder="Search roles..."
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            onFilterClear={handleFilterClear}
+            activeFilterCount={activeFilterCount}
+            onExportCSV={() => exportToCSV(prepareExportData(), 'roles')}
+            onExportXLSX={() => exportToXLSX(prepareExportData(), 'roles')}
             onRefresh={refetch}
-          >
-            <DataTableExport
-              onExportCSV={() => exportToCSV(prepareExportData(), 'roles')}
-              onExportXLSX={() => exportToXLSX(prepareExportData(), 'roles')}
-            />
-          </DataTableToolbar>
-        }
+            isRefreshing={isFetching}
+            columnCustomizer={columnCustomizer}
+          />
+        )}
         bulkActions={
           <DataTableBulkActions
             selectedCount={Object.keys(rowSelection).length}

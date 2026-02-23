@@ -15,6 +15,7 @@ import { UserCreateDialog } from '../components/user-create-dialog';
 import { UserEditDialog } from '../components/user-edit-dialog';
 import { usePagination } from '@/hooks/use-pagination';
 import { useDebounce } from '@/hooks/use-debounce';
+import { useSorting } from '@/hooks/use-sorting';
 import { exportToCSV, exportToXLSX } from '@/lib/export';
 import { formatDateTime } from '@/lib/format';
 import type { User } from '@/types';
@@ -25,6 +26,7 @@ export const UsersPage = () => {
   const debouncedSearch = useDebounce(search);
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const { sorting, setSorting, sortBy, sortOrder } = useSorting();
 
   // Dialog states
   const [createOpen, setCreateOpen] = useState(false);
@@ -34,17 +36,18 @@ export const UsersPage = () => {
   const { mutate: removeUser, isPending: isDeleting } = useDeleteUser();
   const { mutate: updateUser } = useUpdateUser();
 
-  const queryParams = useMemo(
-    () => ({
+  const queryParams = useMemo(() => {
+    const mappedSortBy = sortBy === 'name' ? 'firstName' : sortBy;
+    return {
       page,
       limit,
-      ...(debouncedSearch && { search: debouncedSearch }),
-      ...filters,
-    }),
-    [page, limit, debouncedSearch, filters],
-  );
+      ...(debouncedSearch && { s: debouncedSearch }),
+      ...(filters.roleId && { roleId: filters.roleId }),
+      ...(mappedSortBy && { sortBy: mappedSortBy, sortOrder }),
+    };
+  }, [page, limit, debouncedSearch, filters, sortBy, sortOrder]);
 
-  const { data, isLoading, refetch } = useUsers(queryParams);
+  const { data, isLoading, isFetching, refetch } = useUsers(queryParams);
 
   const handleToggle2FA = useCallback(
     (user: User, enabled: boolean) => {
@@ -56,11 +59,11 @@ export const UsersPage = () => {
   const columns = useMemo(
     () =>
       getUserColumns({
-        onEdit: (user) => setEditUser(user),
-        onDelete: (user) => setDeleteUser(user),
+        onEdit: setEditUser,
+        onDelete: setDeleteUser,
         onToggle2FA: handleToggle2FA,
       }),
-    [handleToggle2FA],
+    [setEditUser, setDeleteUser, handleToggle2FA],
   );
 
   const handleFilterChange = useCallback(
@@ -87,11 +90,10 @@ export const UsersPage = () => {
 
   const handleBulkDelete = () => {
     const selectedIds = Object.keys(rowSelection);
-    if (!data?.items) return;
-    const usersToDelete = data.items.filter((_, index) => selectedIds.includes(String(index)));
-    Promise.all(usersToDelete.map((user) => removeUser(user._id))).then(() => {
-      setRowSelection({});
-    });
+    if (selectedIds.length === 0) return;
+    Promise.all(selectedIds.map((id) => removeUser(id)))
+      .then(() => setRowSelection({}))
+      .catch(() => {});
   };
 
   const prepareExportData = () => {
@@ -119,6 +121,7 @@ export const UsersPage = () => {
       <DataTable
         columns={columns}
         data={data?.items ?? []}
+        getRowId={(row) => row._id}
         isLoading={isLoading}
         pagination={
           data
@@ -129,9 +132,12 @@ export const UsersPage = () => {
         onLimitChange={setLimit}
         rowSelection={rowSelection}
         onRowSelectionChange={setRowSelection}
+        sorting={sorting}
+        onSortingChange={setSorting}
         emptyTitle="No users found"
         emptyDescription="Get started by creating your first user."
-        toolbar={
+        hasActiveFilters={!!debouncedSearch || activeFilterCount > 0}
+        toolbar={(columnCustomizer) => (
           <UserTableToolbar
             search={search}
             onSearchChange={(val) => {
@@ -145,8 +151,10 @@ export const UsersPage = () => {
             onExportCSV={() => exportToCSV(prepareExportData(), 'users')}
             onExportXLSX={() => exportToXLSX(prepareExportData(), 'users')}
             onRefresh={refetch}
+            isRefreshing={isFetching}
+            columnCustomizer={columnCustomizer}
           />
-        }
+        )}
         bulkActions={
           <DataTableBulkActions
             selectedCount={Object.keys(rowSelection).length}

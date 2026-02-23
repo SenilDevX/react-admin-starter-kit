@@ -1,3 +1,5 @@
+import type { PaginationQuery } from './api.types';
+
 export type User = {
   _id: string;
   firstName: string | null;
@@ -28,9 +30,6 @@ export type UpdateUserRequest = {
   twoFactorEnabled?: boolean;
 };
 
-export type ListUsersQuery = {
-  search?: string;
+export type ListUsersQuery = PaginationQuery & {
   roleId?: string;
-  page?: number;
-  limit?: number;
 };

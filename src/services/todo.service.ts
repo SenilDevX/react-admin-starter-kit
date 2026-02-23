@@ -1,9 +1,9 @@
 import { api } from '@/lib/axios';
 import { API_ENDPOINTS } from '@/lib/api-endpoints';
-import type { Todo, CreateTodoRequest, UpdateTodoRequest, PaginatedData, PaginationQuery } from '@/types';
+import type { Todo, CreateTodoRequest, UpdateTodoRequest, PaginatedData, ListTodosQuery } from '@/types';
 
 export const todoService = {
-  getAll: (params?: PaginationQuery) =>
+  getAll: (params?: ListTodosQuery) =>
     api.get<unknown, PaginatedData<Todo>>(API_ENDPOINTS.TODOS, { params }),
 
   getById: (id: string) => api.get<unknown, Todo>(`${API_ENDPOINTS.TODOS}/${id}`),

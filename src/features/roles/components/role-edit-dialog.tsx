@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import {
   Dialog,
   FullScreenDialogContent,
@@ -34,6 +35,17 @@ export const RoleEditDialog = ({ open, onOpenChange, role }: RoleEditDialogProps
         }
       : undefined,
   );
+
+  useEffect(() => {
+    if (role) {
+      form.reset({
+        name: role.name,
+        description: role.description ?? '',
+        permissions: role.permissions,
+        requiresTwoFactor: role.requiresTwoFactor,
+      });
+    }
+  }, [role, form]);
 
   if (!role) return null;
 

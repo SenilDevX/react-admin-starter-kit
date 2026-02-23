@@ -14,6 +14,7 @@ export const auditColumns: ColumnDef<AuditLog>[] = [
   {
     accessorKey: 'userName',
     header: ({ column }) => <DataTableHeader column={column} title="User Name" />,
+    meta: { label: 'User Name' },
     cell: ({ row }) => (
       <span className="max-w-50 truncate font-medium">{row.getValue('userName') || '-'}</span>
     ),
@@ -21,6 +22,7 @@ export const auditColumns: ColumnDef<AuditLog>[] = [
   {
     accessorKey: 'userEmail',
     header: 'Email',
+    meta: { label: 'Email' },
     cell: ({ row }) => (
       <span className="max-w-62.5 truncate text-muted-foreground">
         {row.getValue('userEmail') || '-'}
@@ -31,6 +33,7 @@ export const auditColumns: ColumnDef<AuditLog>[] = [
   {
     accessorKey: 'module',
     header: 'Module',
+    meta: { label: 'Module' },
     cell: ({ row }) => (
       <StatusBadge status={capitalize(row.getValue('module'))} variant="default" />
     ),
@@ -39,6 +42,7 @@ export const auditColumns: ColumnDef<AuditLog>[] = [
   {
     accessorKey: 'action',
     header: 'Action',
+    meta: { label: 'Action' },
     cell: ({ row }) => {
       const action = row.getValue('action') as AuditAction;
       const { variant, label } = actionVariantMap[action] ?? { variant: 'default' as const, label: capitalize(action) };
@@ -49,6 +53,7 @@ export const auditColumns: ColumnDef<AuditLog>[] = [
   {
     accessorKey: 'ipAddress',
     header: 'IP Address',
+    meta: { label: 'IP Address' },
     cell: ({ row }) => (
       <span className="text-muted-foreground">{row.getValue('ipAddress') || '-'}</span>
     ),
@@ -57,6 +62,7 @@ export const auditColumns: ColumnDef<AuditLog>[] = [
   {
     accessorKey: 'createdAt',
     header: ({ column }) => <DataTableHeader column={column} title="Created" />,
+    meta: { label: 'Created' },
     cell: ({ row }) => (
       <span className="text-muted-foreground">{formatDateTime(row.getValue('createdAt'))}</span>
     ),

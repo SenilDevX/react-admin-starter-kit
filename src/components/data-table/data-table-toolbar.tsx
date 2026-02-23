@@ -1,15 +1,19 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import type { ReactNode } from 'react';
 import { RefreshCw, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 
+const MIN_SPIN_MS = 600;
+
 type DataTableToolbarProps = {
   searchValue?: string;
   onSearchChange?: (value: string) => void;
   searchPlaceholder?: string;
   onRefresh?: () => void;
+  isRefreshing?: boolean;
+  columnCustomizer?: ReactNode;
   children?: ReactNode;
 };
 
@@ -18,15 +22,24 @@ export const DataTableToolbar = ({
   onSearchChange,
   searchPlaceholder = 'Search...',
   onRefresh,
+  isRefreshing,
+  columnCustomizer,
   children,
 }: DataTableToolbarProps) => {
   const [spinning, setSpinning] = useState(false);
+  const spinStart = useRef(0);
 
-  const handleRefresh = () => {
-    onRefresh?.();
-    setSpinning(true);
-    setTimeout(() => setSpinning(false), 600);
-  };
+  useEffect(() => {
+    if (isRefreshing) {
+      spinStart.current = Date.now();
+      setSpinning(true);
+    } else if (spinning) {
+      const elapsed = Date.now() - spinStart.current;
+      const remaining = Math.max(0, MIN_SPIN_MS - elapsed);
+      const timer = setTimeout(() => setSpinning(false), remaining);
+      return () => clearTimeout(timer);
+    }
+  }, [isRefreshing]);
 
   return (
     <div className="flex items-center justify-between gap-4 py-4">
@@ -45,11 +58,12 @@ export const DataTableToolbar = ({
       </div>
       <div className="flex items-center gap-2">
         {onRefresh && (
-          <Button variant="outline" size="sm" onClick={handleRefresh}>
+          <Button variant="outline" size="sm" onClick={onRefresh} disabled={spinning}>
             <RefreshCw className={cn('h-4 w-4', spinning && 'animate-spin')} />
           </Button>
         )}
         {children}
+        {columnCustomizer}
       </div>
     </div>
   );

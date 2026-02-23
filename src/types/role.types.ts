@@ -1,3 +1,5 @@
+import type { PaginationQuery } from './api.types';
+
 export type Role = {
   _id: string;
   name: string;
@@ -23,6 +25,10 @@ export type UpdateRoleRequest = {
   permissions?: string[];
   isActive?: boolean;
   requiresTwoFactor?: boolean;
+};
+
+export type ListRolesQuery = PaginationQuery & {
+  isActive?: string;
 };
 
 export type Permission = {

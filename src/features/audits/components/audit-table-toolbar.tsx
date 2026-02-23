@@ -1,27 +1,10 @@
+import { useMemo } from 'react';
 import { DataTableToolbar } from '@/components/data-table/data-table-toolbar';
 import { DataTableFilter, type FilterField } from '@/components/data-table/data-table-filter';
 import { DataTableExport } from '@/components/data-table/data-table-export';
 import { AUDIT_MODULE, AUDIT_ACTION } from '@/types';
 import { capitalize } from '@/lib/format';
-
-const auditFilterFields: FilterField[] = [
-  {
-    key: 'module',
-    label: 'Module',
-    options: Object.values(AUDIT_MODULE).map((value) => ({
-      label: capitalize(value),
-      value,
-    })),
-  },
-  {
-    key: 'action',
-    label: 'Action',
-    options: Object.values(AUDIT_ACTION).map((value) => ({
-      label: capitalize(value),
-      value,
-    })),
-  },
-];
+import { useAuthStore } from '@/stores/auth-store';
 
 type AuditTableToolbarProps = {
   search: string;
@@ -33,6 +16,8 @@ type AuditTableToolbarProps = {
   onExportCSV: () => void;
   onExportXLSX: () => void;
   onRefresh?: () => void;
+  isRefreshing?: boolean;
+  columnCustomizer?: React.ReactNode;
 };
 
 export const AuditTableToolbar = ({
@@ -45,13 +30,51 @@ export const AuditTableToolbar = ({
   onExportCSV,
   onExportXLSX,
   onRefresh,
+  isRefreshing,
+  columnCustomizer,
 }: AuditTableToolbarProps) => {
+  const permissions = useAuthStore((state) => state.user?.role?.permissions ?? []);
+
+  const auditFilterFields: FilterField[] = useMemo(() => {
+    const allowedModules = Object.values(AUDIT_MODULE).filter((mod) =>
+      permissions.includes(`${mod}.read`),
+    );
+
+    return [
+      {
+        key: 'module',
+        label: 'Module',
+        options: allowedModules.map((value) => ({
+          label: capitalize(value),
+          value,
+        })),
+      },
+      {
+        key: 'action',
+        label: 'Action',
+        options: Object.values(AUDIT_ACTION).map((value) => ({
+          label: capitalize(value),
+          value,
+        })),
+      },
+      {
+        key: 'date',
+        label: 'Date Range',
+        type: 'dateRange' as const,
+        fromKey: 'fromDate',
+        toKey: 'toDate',
+      },
+    ];
+  }, [permissions]);
+
   return (
     <DataTableToolbar
       searchValue={search}
       onSearchChange={onSearchChange}
       searchPlaceholder="Search by user name..."
       onRefresh={onRefresh}
+      isRefreshing={isRefreshing}
+      columnCustomizer={columnCustomizer}
     >
       <DataTableFilter
         fields={auditFilterFields}

@@ -24,6 +24,8 @@ type TodoTableToolbarProps = {
   onExportCSV: () => void;
   onExportXLSX: () => void;
   onRefresh?: () => void;
+  isRefreshing?: boolean;
+  columnCustomizer?: React.ReactNode;
 };
 
 export const TodoTableToolbar = ({
@@ -36,6 +38,8 @@ export const TodoTableToolbar = ({
   onExportCSV,
   onExportXLSX,
   onRefresh,
+  isRefreshing,
+  columnCustomizer,
 }: TodoTableToolbarProps) => {
   return (
     <DataTableToolbar
@@ -43,6 +47,8 @@ export const TodoTableToolbar = ({
       onSearchChange={onSearchChange}
       searchPlaceholder="Search todos..."
       onRefresh={onRefresh}
+      isRefreshing={isRefreshing}
+      columnCustomizer={columnCustomizer}
     >
       <DataTableFilter
         fields={statusFilterFields}

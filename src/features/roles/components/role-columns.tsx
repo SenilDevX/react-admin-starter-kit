@@ -33,6 +33,7 @@ export const getRoleColumns = ({ onEdit, onDelete }: RoleColumnActions): ColumnD
   {
     accessorKey: 'name',
     header: ({ column }) => <DataTableHeader column={column} title="Name" />,
+    meta: { label: 'Name' },
     cell: ({ row }) => (
       <span className="font-medium">{row.getValue('name')}</span>
     ),
@@ -40,6 +41,7 @@ export const getRoleColumns = ({ onEdit, onDelete }: RoleColumnActions): ColumnD
   {
     accessorKey: 'description',
     header: 'Description',
+    meta: { label: 'Description' },
     cell: ({ row }) => (
       <span className="max-w-75 truncate text-muted-foreground">
         {row.getValue('description') || '\u2014'}
@@ -49,6 +51,7 @@ export const getRoleColumns = ({ onEdit, onDelete }: RoleColumnActions): ColumnD
   {
     accessorKey: 'permissions',
     header: 'Permissions',
+    meta: { label: 'Permissions' },
     cell: ({ row }) => {
       const permissions = row.getValue('permissions') as string[];
       return (
@@ -62,6 +65,7 @@ export const getRoleColumns = ({ onEdit, onDelete }: RoleColumnActions): ColumnD
   {
     accessorKey: 'requiresTwoFactor',
     header: '2FA Required',
+    meta: { label: '2FA Required' },
     cell: ({ row }) => {
       const requires = row.getValue('requiresTwoFactor') as boolean;
       return (
@@ -76,6 +80,7 @@ export const getRoleColumns = ({ onEdit, onDelete }: RoleColumnActions): ColumnD
   {
     accessorKey: 'isActive',
     header: 'Status',
+    meta: { label: 'Status' },
     cell: ({ row }) => {
       const isActive = row.getValue('isActive') as boolean;
       return (
@@ -90,6 +95,7 @@ export const getRoleColumns = ({ onEdit, onDelete }: RoleColumnActions): ColumnD
   {
     accessorKey: 'isSystem',
     header: 'Type',
+    meta: { label: 'Type' },
     cell: ({ row }) => {
       const isSystem = row.getValue('isSystem') as boolean;
       return (
@@ -104,6 +110,7 @@ export const getRoleColumns = ({ onEdit, onDelete }: RoleColumnActions): ColumnD
   {
     accessorKey: 'createdAt',
     header: ({ column }) => <DataTableHeader column={column} title="Created" />,
+    meta: { label: 'Created' },
     cell: ({ row }) => (
       <span className="text-muted-foreground">{formatDateTime(row.getValue('createdAt'))}</span>
     ),

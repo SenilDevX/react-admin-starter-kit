@@ -1,3 +1,5 @@
+import type { PaginationQuery } from './api.types';
+
 export const TODO_STATUS = {
   PENDING: 'pending',
   COMPLETED: 'completed',
@@ -23,5 +25,9 @@ export type CreateTodoRequest = {
 export type UpdateTodoRequest = {
   title?: string;
   description?: string;
+  status?: TodoStatus;
+};
+
+export type ListTodosQuery = PaginationQuery & {
   status?: TodoStatus;
 };

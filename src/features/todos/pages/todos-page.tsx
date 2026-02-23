@@ -15,6 +15,7 @@ import { TodoCreateDialog } from '../components/todo-create-dialog';
 import { TodoEditDialog } from '../components/todo-edit-dialog';
 import { usePagination } from '@/hooks/use-pagination';
 import { useDebounce } from '@/hooks/use-debounce';
+import { useSorting } from '@/hooks/use-sorting';
 import { exportToCSV, exportToXLSX } from '@/lib/export';
 import { formatDateTime } from '@/lib/format';
 import type { Todo } from '@/types';
@@ -26,6 +27,7 @@ export const TodosPage = () => {
 
   const { page, limit, setPage, setLimit } = usePagination();
   const debouncedSearch = useDebounce(search);
+  const { sorting, setSorting, sortBy, sortOrder } = useSorting();
 
   const [createOpen, setCreateOpen] = useState(false);
   const [editTodo, setEditTodo] = useState<Todo | null>(null);
@@ -37,21 +39,22 @@ export const TodosPage = () => {
     () => ({
       page,
       limit,
-      ...(debouncedSearch && { search: debouncedSearch }),
-      ...filters,
+      ...(debouncedSearch && { s: debouncedSearch }),
+      ...(filters.status && { status: filters.status as 'pending' | 'completed' }),
+      ...(sortBy && { sortBy, sortOrder }),
     }),
-    [page, limit, debouncedSearch, filters],
+    [page, limit, debouncedSearch, filters, sortBy, sortOrder],
   );
 
-  const { data, isLoading, refetch } = useTodos(queryParams);
+  const { data, isLoading, isFetching, refetch } = useTodos(queryParams);
 
   const columns = useMemo(
     () =>
       getTodoColumns({
-        onEdit: (todo) => setEditTodo(todo),
-        onDelete: (todo) => setDeleteTodo(todo),
+        onEdit: setEditTodo,
+        onDelete: setDeleteTodo,
       }),
-    [],
+    [setEditTodo, setDeleteTodo],
   );
 
   const handleFilterChange = useCallback(
@@ -78,11 +81,10 @@ export const TodosPage = () => {
 
   const handleBulkDelete = () => {
     const selectedIds = Object.keys(rowSelection);
-    if (!data?.items) return;
-    const todosToDelete = data.items.filter((_, index) => selectedIds.includes(String(index)));
-    Promise.all(todosToDelete.map((todo) => removeTodo(todo._id))).then(() => {
-      setRowSelection({});
-    });
+    if (selectedIds.length === 0) return;
+    Promise.all(selectedIds.map((id) => removeTodo(id)))
+      .then(() => setRowSelection({}))
+      .catch(() => {});
   };
 
   const prepareExportData = () => {
@@ -109,6 +111,7 @@ export const TodosPage = () => {
       <DataTable
         columns={columns}
         data={data?.items ?? []}
+        getRowId={(row) => row._id}
         isLoading={isLoading}
         pagination={
           data
@@ -119,9 +122,12 @@ export const TodosPage = () => {
         onLimitChange={setLimit}
         rowSelection={rowSelection}
         onRowSelectionChange={setRowSelection}
+        sorting={sorting}
+        onSortingChange={setSorting}
         emptyTitle="No todos found"
         emptyDescription="Get started by creating your first todo."
-        toolbar={
+        hasActiveFilters={!!debouncedSearch || activeFilterCount > 0}
+        toolbar={(columnCustomizer) => (
           <TodoTableToolbar
             search={search}
             onSearchChange={(val) => {
@@ -135,8 +141,10 @@ export const TodosPage = () => {
             onExportCSV={() => exportToCSV(prepareExportData(), 'todos')}
             onExportXLSX={() => exportToXLSX(prepareExportData(), 'todos')}
             onRefresh={refetch}
+            isRefreshing={isFetching}
+            columnCustomizer={columnCustomizer}
           />
-        }
+        )}
         bulkActions={
           <DataTableBulkActions
             selectedCount={Object.keys(rowSelection).length}

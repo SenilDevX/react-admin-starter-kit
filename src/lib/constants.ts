@@ -26,6 +26,7 @@ export const QUERY_KEYS = {
   role: (id: string) => ['roles', id] as const,
   permissions: ['permissions'] as const,
   audits: (params?: Record<string, unknown>) => ['audits', params] as const,
+  audit: (id: string) => ['audits', id] as const,
   dashboardStats: ['dashboard-stats'] as const,
 } as const;
 

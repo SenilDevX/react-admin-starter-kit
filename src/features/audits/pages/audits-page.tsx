@@ -7,32 +7,37 @@ import { AuditTableToolbar } from '../components/audit-table-toolbar';
 import { AuditDetailDrawer } from '../components/audit-detail-drawer';
 import { usePagination } from '@/hooks/use-pagination';
 import { useDebounce } from '@/hooks/use-debounce';
+import { useSorting } from '@/hooks/use-sorting';
 import { exportToCSV, exportToXLSX } from '@/lib/export';
 import { formatDateTime, capitalize } from '@/lib/format';
-import type { AuditLog, AuditModule, AuditAction } from '@/types';
+import type { AuditModule, AuditAction } from '@/types';
 
 export const AuditsPage = () => {
   const { page, limit, setPage, setLimit } = usePagination();
   const [search, setSearch] = useState('');
   const debouncedSearch = useDebounce(search);
   const [filters, setFilters] = useState<Record<string, string>>({});
-  const [selectedAudit, setSelectedAudit] = useState<AuditLog | null>(null);
+  const [selectedAuditId, setSelectedAuditId] = useState<string | null>(null);
+  const { sorting, setSorting, sortBy, sortOrder } = useSorting();
 
   const queryParams = useMemo(
     () => ({
       page,
       limit,
-      ...(debouncedSearch && { userName: debouncedSearch }),
+      ...(debouncedSearch && { s: debouncedSearch }),
       ...(filters.module && { module: filters.module as AuditModule }),
       ...(filters.action && { action: filters.action as AuditAction }),
+      ...(filters.fromDate && { fromDate: filters.fromDate }),
+      ...(filters.toDate && { toDate: filters.toDate }),
+      ...(sortBy && { sortBy, sortOrder }),
     }),
-    [page, limit, debouncedSearch, filters],
+    [page, limit, debouncedSearch, filters, sortBy, sortOrder],
   );
 
-  const { data, isLoading, refetch } = useAudits(queryParams);
+  const { data, isLoading, isFetching, refetch } = useAudits(queryParams);
 
-  const handleRowClick = useCallback((audit: AuditLog) => {
-    setSelectedAudit(audit);
+  const handleRowClick = useCallback((audit: { _id: string }) => {
+    setSelectedAuditId(audit._id);
   }, []);
 
   const handleFilterChange = useCallback(
@@ -48,7 +53,13 @@ export const AuditsPage = () => {
     setPage(1);
   }, [setPage]);
 
-  const activeFilterCount = Object.values(filters).filter(Boolean).length;
+  const activeFilterCount = useMemo(() => {
+    let count = 0;
+    if (filters.module) count++;
+    if (filters.action) count++;
+    if (filters.fromDate || filters.toDate) count++;
+    return count;
+  }, [filters]);
 
   const prepareExportData = () => {
     if (!data?.items) return [];
@@ -80,9 +91,12 @@ export const AuditsPage = () => {
         }
         onPageChange={setPage}
         onLimitChange={setLimit}
+        sorting={sorting}
+        onSortingChange={setSorting}
         emptyTitle="No audit logs found"
         emptyDescription="There are no audit logs matching your criteria."
-        toolbar={
+        hasActiveFilters={!!debouncedSearch || activeFilterCount > 0}
+        toolbar={(columnCustomizer) => (
           <AuditTableToolbar
             search={search}
             onSearchChange={(val) => {
@@ -96,14 +110,16 @@ export const AuditsPage = () => {
             onExportCSV={() => exportToCSV(prepareExportData(), 'audit-logs')}
             onExportXLSX={() => exportToXLSX(prepareExportData(), 'audit-logs')}
             onRefresh={refetch}
+            isRefreshing={isFetching}
+            columnCustomizer={columnCustomizer}
           />
-        }
+        )}
       />
 
       <AuditDetailDrawer
-        open={!!selectedAudit}
-        onOpenChange={(open) => !open && setSelectedAudit(null)}
-        audit={selectedAudit}
+        open={!!selectedAuditId}
+        onOpenChange={(open) => !open && setSelectedAuditId(null)}
+        auditId={selectedAuditId}
       />
     </div>
   );

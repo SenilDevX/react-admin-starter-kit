@@ -1,9 +1,9 @@
 import { api } from '@/lib/axios';
 import { API_ENDPOINTS } from '@/lib/api-endpoints';
-import type { Role, CreateRoleRequest, UpdateRoleRequest, PaginatedData, PaginationQuery } from '@/types';
+import type { Role, CreateRoleRequest, UpdateRoleRequest, PaginatedData, ListRolesQuery } from '@/types';
 
 export const roleService = {
-  getAll: (params?: PaginationQuery) =>
+  getAll: (params?: ListRolesQuery) =>
     api.get<unknown, PaginatedData<Role>>(API_ENDPOINTS.ROLES, { params }),
 
   getById: (id: string) => api.get<unknown, Role>(`${API_ENDPOINTS.ROLES}/${id}`),

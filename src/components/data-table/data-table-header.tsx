@@ -19,20 +19,22 @@ export const DataTableHeader = <TData, TValue>({
   }
 
   return (
-    <Button
-      variant="ghost"
-      size="sm"
-      className={cn('-ml-3 h-8 data-[state=open]:bg-accent', className)}
-      onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
-    >
-      {title}
-      {column.getIsSorted() === 'desc' ? (
-        <ArrowDown className="ml-1 h-3.5 w-3.5" />
-      ) : column.getIsSorted() === 'asc' ? (
-        <ArrowUp className="ml-1 h-3.5 w-3.5" />
-      ) : (
-        <ArrowUpDown className="ml-1 h-3.5 w-3.5 text-muted-foreground/50" />
-      )}
-    </Button>
+    <div className={cn('flex items-center gap-1', className)}>
+      <span>{title}</span>
+      <Button
+        variant="ghost"
+        size="icon-xs"
+        aria-label={`Sort by ${title}`}
+        onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
+      >
+        {column.getIsSorted() === 'desc' ? (
+          <ArrowDown />
+        ) : column.getIsSorted() === 'asc' ? (
+          <ArrowUp />
+        ) : (
+          <ArrowUpDown className="text-muted-foreground/50" />
+        )}
+      </Button>
+    </div>
   );
 };

@@ -1,3 +1,5 @@
+import type { PaginationQuery } from './api.types';
+
 export const AUDIT_MODULE = {
   USERS: 'users',
   ROLES: 'roles',
@@ -31,13 +33,9 @@ export type AuditLog = {
   createdAt: string;
 };
 
-export type ListAuditsQuery = {
+export type ListAuditsQuery = PaginationQuery & {
   module?: AuditModule;
-  recordId?: string;
-  userId?: string;
   action?: AuditAction;
   fromDate?: string;
   toDate?: string;
-  page?: number;
-  limit?: number;
 };

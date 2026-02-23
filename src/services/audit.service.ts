@@ -5,4 +5,7 @@ import type { AuditLog, ListAuditsQuery, PaginatedData } from '@/types';
 export const auditService = {
   getAll: (params?: ListAuditsQuery) =>
     api.get<unknown, PaginatedData<AuditLog>>(API_ENDPOINTS.AUDITS, { params }),
+
+  getById: (id: string) =>
+    api.get<unknown, AuditLog>(`${API_ENDPOINTS.AUDITS}/${id}`),
 };
