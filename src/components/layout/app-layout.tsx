@@ -3,6 +3,7 @@ import { AppSidebar } from './sidebar';
 import { Header } from './header';
 import { useTokenRefresh } from '@/hooks/use-token-refresh';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+import { GlobalDialogs } from '@/components/shared/global-dialogs';
 
 export const AppLayout = () => {
   useTokenRefresh();
@@ -16,6 +17,7 @@ export const AppLayout = () => {
           <Outlet />
         </main>
       </SidebarInset>
+      <GlobalDialogs />
     </SidebarProvider>
   );
 };

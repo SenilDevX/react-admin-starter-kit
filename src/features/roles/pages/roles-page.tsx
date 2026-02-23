@@ -11,7 +11,7 @@ import { useRoles } from '../hooks/use-roles';
 import { useDeleteRole } from '../hooks/use-role-mutations';
 import { getRoleColumns } from '../components/role-columns';
 import { RoleTableToolbar } from '../components/role-table-toolbar';
-import { RoleCreateDialog } from '../components/role-create-dialog';
+import { useDialogStore, DIALOG_KEY } from '@/stores/dialog-store';
 import { RoleEditDialog } from '../components/role-edit-dialog';
 import { usePagination } from '@/hooks/use-pagination';
 import { useDebounce } from '@/hooks/use-debounce';
@@ -28,8 +28,7 @@ export const RolesPage = () => {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const { sorting, setSorting, sortBy, sortOrder } = useSorting();
 
-  // Dialog states
-  const [createOpen, setCreateOpen] = useState(false);
+  const { openDialog } = useDialogStore();
   const [editRole, setEditRole] = useState<Role | null>(null);
   const [deleteRole, setDeleteRole] = useState<Role | null>(null);
 
@@ -107,7 +106,7 @@ export const RolesPage = () => {
     <div>
       <PageHeader title="Roles" description="Manage roles and permissions.">
         <PermissionGate permission="roles.create">
-          <Button onClick={() => setCreateOpen(true)}>
+          <Button onClick={() => openDialog(DIALOG_KEY.CREATE_ROLE)}>
             <Plus className="mr-2 h-4 w-4" />
             Add Role
           </Button>
@@ -160,7 +159,6 @@ export const RolesPage = () => {
         }
       />
 
-      <RoleCreateDialog open={createOpen} onOpenChange={setCreateOpen} />
       <RoleEditDialog
         open={!!editRole}
         onOpenChange={(open) => !open && setEditRole(null)}

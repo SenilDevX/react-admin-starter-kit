@@ -11,7 +11,7 @@ import { useUsers } from '../hooks/use-users';
 import { useDeleteUser, useUpdateUser } from '../hooks/use-user-mutations';
 import { getUserColumns } from '../components/user-columns';
 import { UserTableToolbar } from '../components/user-table-toolbar';
-import { UserCreateDialog } from '../components/user-create-dialog';
+import { useDialogStore, DIALOG_KEY } from '@/stores/dialog-store';
 import { UserEditDialog } from '../components/user-edit-dialog';
 import { usePagination } from '@/hooks/use-pagination';
 import { useDebounce } from '@/hooks/use-debounce';
@@ -28,8 +28,7 @@ export const UsersPage = () => {
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
   const { sorting, setSorting, sortBy, sortOrder } = useSorting();
 
-  // Dialog states
-  const [createOpen, setCreateOpen] = useState(false);
+  const { openDialog } = useDialogStore();
   const [editUser, setEditUser] = useState<User | null>(null);
   const [deleteUser, setDeleteUser] = useState<User | null>(null);
 
@@ -111,7 +110,7 @@ export const UsersPage = () => {
     <div>
       <PageHeader title="Users" description="Manage user accounts.">
         <PermissionGate permission="users.create">
-          <Button onClick={() => setCreateOpen(true)}>
+          <Button onClick={() => openDialog(DIALOG_KEY.CREATE_USER)}>
             <Plus className="mr-2 h-4 w-4" />
             Add User
           </Button>
@@ -164,7 +163,6 @@ export const UsersPage = () => {
         }
       />
 
-      <UserCreateDialog open={createOpen} onOpenChange={setCreateOpen} />
       <UserEditDialog open={!!editUser} onOpenChange={(open) => !open && setEditUser(null)} user={editUser} />
       <ConfirmDialog
         open={!!deleteUser}

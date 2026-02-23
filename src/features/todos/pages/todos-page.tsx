@@ -11,7 +11,7 @@ import { useTodos } from '../hooks/use-todos';
 import { useDeleteTodo } from '../hooks/use-todo-mutations';
 import { getTodoColumns } from '../components/todo-columns';
 import { TodoTableToolbar } from '../components/todo-table-toolbar';
-import { TodoCreateDialog } from '../components/todo-create-dialog';
+import { useDialogStore, DIALOG_KEY } from '@/stores/dialog-store';
 import { TodoEditDialog } from '../components/todo-edit-dialog';
 import { usePagination } from '@/hooks/use-pagination';
 import { useDebounce } from '@/hooks/use-debounce';
@@ -29,7 +29,7 @@ export const TodosPage = () => {
   const debouncedSearch = useDebounce(search);
   const { sorting, setSorting, sortBy, sortOrder } = useSorting();
 
-  const [createOpen, setCreateOpen] = useState(false);
+  const { openDialog } = useDialogStore();
   const [editTodo, setEditTodo] = useState<Todo | null>(null);
   const [deleteTodo, setDeleteTodo] = useState<Todo | null>(null);
 
@@ -101,7 +101,7 @@ export const TodosPage = () => {
     <div>
       <PageHeader title="Todos" description="Manage your todo items.">
         <PermissionGate permission="todos.create">
-          <Button onClick={() => setCreateOpen(true)}>
+          <Button onClick={() => openDialog(DIALOG_KEY.CREATE_TODO)}>
             <Plus className="mr-2 h-4 w-4" />
             Add Todo
           </Button>
@@ -154,7 +154,6 @@ export const TodosPage = () => {
         }
       />
 
-      <TodoCreateDialog open={createOpen} onOpenChange={setCreateOpen} />
       <TodoEditDialog open={!!editTodo} onOpenChange={(open) => !open && setEditTodo(null)} todo={editTodo} />
       <ConfirmDialog
         open={!!deleteTodo}
