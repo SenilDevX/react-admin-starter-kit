@@ -6,6 +6,7 @@ import { useRegister } from '../hooks/use-register';
 import { ROUTES } from '@/lib/constants';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { PasswordInput } from '@/components/ui/password-input';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Form,
@@ -85,7 +86,7 @@ export const RegisterForm = () => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="Min. 8 characters" {...field} />
+                    <PasswordInput placeholder="Min. 8 characters" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

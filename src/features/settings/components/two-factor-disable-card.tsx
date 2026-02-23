@@ -4,6 +4,7 @@ import { disableTwoFactorSchema, type DisableTwoFactorFormValues } from '@/valid
 import { useDisableTwoFactor } from '../hooks/use-two-factor-setup';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { PasswordInput } from '@/components/ui/password-input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import {
   Form,
@@ -59,7 +60,7 @@ export const TwoFactorDisableCard = () => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="Enter your password" {...field} />
+                      <PasswordInput placeholder="Enter your password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

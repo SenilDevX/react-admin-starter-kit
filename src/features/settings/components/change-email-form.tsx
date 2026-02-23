@@ -5,6 +5,7 @@ import { useChangeEmail } from '../hooks/use-change-email';
 import { useAuthStore } from '@/stores/auth-store';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { PasswordInput } from '@/components/ui/password-input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import {
   Form,
@@ -71,7 +72,7 @@ export const ChangeEmailForm = () => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="Enter your password to verify" {...field} />
+                    <PasswordInput placeholder="Enter your password to verify" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

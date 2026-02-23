@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { changePasswordSchema, type ChangePasswordFormValues } from '@/validations/auth.schema';
 import { useChangePassword } from '../hooks/use-change-password';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { PasswordInput } from '@/components/ui/password-input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import {
   Form,
@@ -52,7 +52,7 @@ export const ChangePasswordForm = () => {
                 <FormItem>
                   <FormLabel>Current Password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="Enter current password" {...field} />
+                    <PasswordInput placeholder="Enter current password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -65,7 +65,7 @@ export const ChangePasswordForm = () => {
                 <FormItem>
                   <FormLabel>New Password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="Enter new password" {...field} />
+                    <PasswordInput placeholder="Enter new password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

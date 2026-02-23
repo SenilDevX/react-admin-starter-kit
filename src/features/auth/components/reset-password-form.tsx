@@ -4,7 +4,7 @@ import { useSearchParams } from 'react-router';
 import { resetPasswordSchema, type ResetPasswordFormValues } from '@/validations/auth.schema';
 import { useResetPassword } from '../hooks/use-reset-password';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { PasswordInput } from '@/components/ui/password-input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import {
   Form,
@@ -46,7 +46,7 @@ export const ResetPasswordForm = () => {
                 <FormItem>
                   <FormLabel>New password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="Min. 8 characters" {...field} />
+                    <PasswordInput placeholder="Min. 8 characters" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -59,7 +59,7 @@ export const ResetPasswordForm = () => {
                 <FormItem>
                   <FormLabel>Confirm password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="Re-enter password" {...field} />
+                    <PasswordInput placeholder="Re-enter password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

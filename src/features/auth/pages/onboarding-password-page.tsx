@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { changePasswordSchema, type ChangePasswordFormValues } from '@/validations/auth.schema';
 import { ROUTES } from '@/lib/constants';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { PasswordInput } from '@/components/ui/password-input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import {
   Form,
@@ -65,7 +65,7 @@ export const OnboardingPasswordPage = () => {
                 <FormItem>
                   <FormLabel>Current password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="Enter current password" {...field} />
+                    <PasswordInput placeholder="Enter current password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -78,7 +78,7 @@ export const OnboardingPasswordPage = () => {
                 <FormItem>
                   <FormLabel>New password</FormLabel>
                   <FormControl>
-                    <Input type="password" placeholder="Min. 8 characters" {...field} />
+                    <PasswordInput placeholder="Min. 8 characters" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

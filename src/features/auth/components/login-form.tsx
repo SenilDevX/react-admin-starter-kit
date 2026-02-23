@@ -6,6 +6,7 @@ import { useLogin } from '../hooks/use-login';
 import { ROUTES } from '@/lib/constants';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { PasswordInput } from '@/components/ui/password-input';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Form,
@@ -65,7 +66,7 @@ export const LoginForm = () => {
                     </Link>
                   </div>
                   <FormControl>
-                    <Input type="password" placeholder="Enter your password" {...field} />
+                    <PasswordInput placeholder="Enter your password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
