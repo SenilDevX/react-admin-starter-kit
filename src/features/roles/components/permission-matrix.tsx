@@ -8,12 +8,16 @@ type PermissionMatrixProps = {
   permissions: Permission[];
   selectedPermissions: string[];
   onToggle: (permissionName: string) => void;
+  onToggleModule?: (permissionNames: string[]) => void;
+  onToggleAll?: (permissionNames: string[]) => void;
 };
 
 export const PermissionMatrix = ({
   permissions,
   selectedPermissions,
   onToggle,
+  onToggleModule,
+  onToggleAll,
 }: PermissionMatrixProps) => {
   const permissionMap = useMemo(() => {
     const map = new Map<string, Permission>();
@@ -22,6 +26,26 @@ export const PermissionMatrix = ({
     }
     return map;
   }, [permissions]);
+
+  const modulePermissions = useMemo(() => {
+    const map = new Map<string, string[]>();
+    for (const module of PERMISSION_MODULES) {
+      const names: string[] = [];
+      for (const action of PERMISSION_ACTIONS) {
+        const permission = permissionMap.get(`${module}.${action}`);
+        if (permission) names.push(permission.name);
+      }
+      map.set(module, names);
+    }
+    return map;
+  }, [permissionMap]);
+
+  const allPermissionNames = useMemo(() => {
+    return Array.from(modulePermissions.values()).flat();
+  }, [modulePermissions]);
+
+  const allSelected = allPermissionNames.length > 0 &&
+    allPermissionNames.every((p) => selectedPermissions.includes(p));
 
   return (
     <div className="rounded-md border">
@@ -40,34 +64,64 @@ export const PermissionMatrix = ({
                   {capitalize(action)}
                 </th>
               ))}
+              {onToggleAll && (
+                <th className="px-4 py-3 text-center font-medium text-muted-foreground">
+                  <div className="flex flex-col items-center gap-1">
+                    <span>All</span>
+                    <Checkbox
+                      checked={allSelected}
+                      onCheckedChange={() => onToggleAll(allPermissionNames)}
+                      aria-label="Toggle all permissions"
+                    />
+                  </div>
+                </th>
+              )}
             </tr>
           </thead>
           <tbody>
-            {PERMISSION_MODULES.map((module) => (
-              <tr key={module} className="border-b last:border-b-0">
-                <td className="px-4 py-3 font-medium">{capitalize(module)}</td>
-                {PERMISSION_ACTIONS.map((action) => {
-                  const permission = permissionMap.get(`${module}.${action}`);
-                  const isSelected = permission
-                    ? selectedPermissions.includes(permission.name)
-                    : false;
+            {PERMISSION_MODULES.map((module, index) => {
+              const modulePerms = modulePermissions.get(module) ?? [];
+              const moduleAllSelected = modulePerms.length > 0 &&
+                modulePerms.every((p) => selectedPermissions.includes(p));
 
-                  return (
-                    <td key={action} className="px-4 py-3 text-center">
-                      {permission ? (
-                        <Checkbox
-                          checked={isSelected}
-                          onCheckedChange={() => onToggle(permission.name)}
-                          aria-label={`${capitalize(module)} ${action}`}
-                        />
-                      ) : (
-                        <span className="text-muted-foreground">\u2014</span>
-                      )}
+              return (
+                <tr
+                  key={module}
+                  className={`border-b last:border-b-0 ${index % 2 === 1 ? 'bg-muted/30' : ''}`}
+                >
+                  <td className="px-4 py-3 font-medium">{capitalize(module)}</td>
+                  {PERMISSION_ACTIONS.map((action) => {
+                    const permission = permissionMap.get(`${module}.${action}`);
+                    const isSelected = permission
+                      ? selectedPermissions.includes(permission.name)
+                      : false;
+
+                    return (
+                      <td key={action} className="px-4 py-3 text-center">
+                        {permission ? (
+                          <Checkbox
+                            checked={isSelected}
+                            onCheckedChange={() => onToggle(permission.name)}
+                            aria-label={`${capitalize(module)} ${action}`}
+                          />
+                        ) : (
+                          <span className="text-muted-foreground">&mdash;</span>
+                        )}
+                      </td>
+                    );
+                  })}
+                  {onToggleModule && (
+                    <td className="px-4 py-3 text-center">
+                      <Checkbox
+                        checked={moduleAllSelected}
+                        onCheckedChange={() => onToggleModule(modulePerms)}
+                        aria-label={`Toggle all ${module} permissions`}
+                      />
                     </td>
-                  );
-                })}
-              </tr>
-            ))}
+                  )}
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
