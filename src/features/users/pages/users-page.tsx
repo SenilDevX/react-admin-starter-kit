@@ -8,7 +8,7 @@ import { ConfirmDialog } from '@/components/shared/confirm-dialog';
 import { PermissionGate } from '@/components/shared/permission-gate';
 import { Button } from '@/components/ui/button';
 import { useUsers } from '../hooks/use-users';
-import { useDeleteUser } from '../hooks/use-user-mutations';
+import { useDeleteUser, useUpdateUser } from '../hooks/use-user-mutations';
 import { getUserColumns } from '../components/user-columns';
 import { UserTableToolbar } from '../components/user-table-toolbar';
 import { UserCreateDialog } from '../components/user-create-dialog';
@@ -32,6 +32,7 @@ export const UsersPage = () => {
   const [deleteUser, setDeleteUser] = useState<User | null>(null);
 
   const { mutate: removeUser, isPending: isDeleting } = useDeleteUser();
+  const { mutate: updateUser } = useUpdateUser();
 
   const queryParams = useMemo(
     () => ({
@@ -45,13 +46,21 @@ export const UsersPage = () => {
 
   const { data, isLoading, refetch } = useUsers(queryParams);
 
+  const handleToggle2FA = useCallback(
+    (user: User, enabled: boolean) => {
+      updateUser({ id: user._id, data: { twoFactorEnabled: enabled } });
+    },
+    [updateUser],
+  );
+
   const columns = useMemo(
     () =>
       getUserColumns({
         onEdit: (user) => setEditUser(user),
         onDelete: (user) => setDeleteUser(user),
+        onToggle2FA: handleToggle2FA,
       }),
-    [],
+    [handleToggle2FA],
   );
 
   const handleFilterChange = useCallback(

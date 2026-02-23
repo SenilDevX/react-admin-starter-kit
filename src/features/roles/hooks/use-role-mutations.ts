@@ -12,8 +12,8 @@ export const useCreateRole = () => {
       queryClient.invalidateQueries({ queryKey: ['roles'] });
       toast.success('Role created successfully');
     },
-    onError: () => {
-      toast.error('Failed to create role');
+    onError: (error: { message: string }) => {
+      toast.error(error.message || 'Failed to create role');
     },
   });
 };
@@ -28,8 +28,8 @@ export const useUpdateRole = () => {
       queryClient.invalidateQueries({ queryKey: ['roles'] });
       toast.success('Role updated successfully');
     },
-    onError: () => {
-      toast.error('Failed to update role');
+    onError: (error: { message: string }) => {
+      toast.error(error.message || 'Failed to update role');
     },
   });
 };
@@ -43,8 +43,8 @@ export const useDeleteRole = () => {
       queryClient.invalidateQueries({ queryKey: ['roles'] });
       toast.success('Role deleted successfully');
     },
-    onError: () => {
-      toast.error('Failed to delete role');
+    onError: (error: { message: string }) => {
+      toast.error(error.message || 'Failed to delete role');
     },
   });
 };

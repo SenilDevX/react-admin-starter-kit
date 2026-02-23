@@ -12,8 +12,8 @@ export const useCreateTodo = () => {
       queryClient.invalidateQueries({ queryKey: ['todos'] });
       toast.success('Todo created successfully');
     },
-    onError: () => {
-      toast.error('Failed to create todo');
+    onError: (error: { message: string }) => {
+      toast.error(error.message || 'Failed to create todo');
     },
   });
 };
@@ -28,8 +28,8 @@ export const useUpdateTodo = () => {
       queryClient.invalidateQueries({ queryKey: ['todos'] });
       toast.success('Todo updated successfully');
     },
-    onError: () => {
-      toast.error('Failed to update todo');
+    onError: (error: { message: string }) => {
+      toast.error(error.message || 'Failed to update todo');
     },
   });
 };
@@ -43,8 +43,8 @@ export const useDeleteTodo = () => {
       queryClient.invalidateQueries({ queryKey: ['todos'] });
       toast.success('Todo deleted successfully');
     },
-    onError: () => {
-      toast.error('Failed to delete todo');
+    onError: (error: { message: string }) => {
+      toast.error(error.message || 'Failed to delete todo');
     },
   });
 };
