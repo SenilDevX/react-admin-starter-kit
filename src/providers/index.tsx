@@ -6,7 +6,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { queryClient } from '@/lib/query-client';
 import { AuthProvider } from './auth-provider';
 
-export const AppProviders = ({ children }: { children: ReactNode }) => {
+export const Providers = ({ children }: { children: ReactNode }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>

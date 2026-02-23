@@ -1,14 +1,14 @@
 import { RouterProvider } from 'react-router';
-import { AppProviders } from '@/providers/app-providers';
 import { router } from '@/routes';
 import { Badge } from './components/ui/badge';
+import { Providers } from './providers';
 
 export const App = () => {
   return (
     <>
-      <AppProviders>
+      <Providers>
         <RouterProvider router={router} />
-      </AppProviders>
+      </Providers>
       {import.meta.env.VITE_ENVIRONMENT === 'dev' && (
         <Badge className="z-30 fixed bottom-16 right-4">Dev</Badge>
       )}
