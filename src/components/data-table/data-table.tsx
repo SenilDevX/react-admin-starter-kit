@@ -42,6 +42,7 @@ type DataTableProps<TData, TValue> = {
   onRowSelectionChange?: (selection: RowSelectionState) => void;
   columnVisibility?: VisibilityState;
   onColumnVisibilityChange?: (visibility: VisibilityState) => void;
+  onRowClick?: (row: TData) => void;
   emptyTitle?: string;
   emptyDescription?: string;
 };
@@ -59,6 +60,7 @@ export const DataTable = <TData, TValue>({
   onRowSelectionChange,
   columnVisibility: controlledColumnVisibility,
   onColumnVisibilityChange,
+  onRowClick,
   emptyTitle,
   emptyDescription,
 }: DataTableProps<TData, TValue>) => {
@@ -128,7 +130,12 @@ export const DataTable = <TData, TValue>({
             </TableHeader>
             <TableBody>
               {table.getRowModel().rows.map((row) => (
-                <TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && 'selected'}
+                  className={onRowClick ? 'cursor-pointer' : undefined}
+                  onClick={onRowClick ? () => onRowClick(row.original) : undefined}
+                >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
