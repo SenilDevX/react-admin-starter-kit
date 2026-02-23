@@ -78,14 +78,14 @@ export const LoginForm = () => {
           </form>
         </Form>
       </CardContent>
-      <CardFooter className="justify-center">
+      {/* <CardFooter className="justify-center">
         <p className="text-sm text-muted-foreground">
           Don&apos;t have an account?{' '}
           <Link to={ROUTES.REGISTER} className="font-medium text-primary hover:underline">
             Sign up
           </Link>
         </p>
-      </CardFooter>
+      </CardFooter> */}
     </Card>
   );
 };

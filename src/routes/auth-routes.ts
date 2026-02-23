@@ -8,13 +8,13 @@ export const authRoutes = [
       import('@/features/auth/pages/login-page').then((m) => ({ default: m.LoginPage })),
     ),
   },
-  {
-    id: 'register',
-    path: '/register',
-    element: lazy(() =>
-      import('@/features/auth/pages/register-page').then((m) => ({ default: m.RegisterPage })),
-    ),
-  },
+  // {
+  //   id: 'register',
+  //   path: '/register',
+  //   element: lazy(() =>
+  //     import('@/features/auth/pages/register-page').then((m) => ({ default: m.RegisterPage })),
+  //   ),
+  // },
   {
     id: 'forgot-password',
     path: '/forgot-password',
