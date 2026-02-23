@@ -3,7 +3,6 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { SidebarTrigger } from '@/components/ui/sidebar';
-import { UserMenu } from './user-menu';
 
 export const Header = () => {
   return (
@@ -22,7 +21,6 @@ export const Header = () => {
         <Button variant="ghost" size="icon" className="relative">
           <Bell className="h-5 w-5" />
         </Button>
-        <UserMenu />
       </div>
     </header>
   );

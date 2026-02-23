@@ -6,10 +6,7 @@ import {
   Shield,
   FileText,
   Settings,
-  LogOut,
-  HelpCircle,
 } from 'lucide-react';
-import { useAuthStore } from '@/stores/auth-store';
 import { usePermissions } from '@/hooks/use-permissions';
 import { ROUTES } from '@/lib/constants';
 import type { NavGroup } from '@/types';
@@ -24,6 +21,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { UserMenu } from './user-menu';
 
 const navConfig: NavGroup[] = [
   {
@@ -50,7 +48,6 @@ const navConfig: NavGroup[] = [
 ];
 
 export const AppSidebar = () => {
-  const { logout } = useAuthStore();
   const { hasPermission } = usePermissions();
   const location = useLocation();
 
@@ -108,22 +105,7 @@ export const AppSidebar = () => {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Help & Support" asChild>
-              <a href="#" onClick={(e) => e.preventDefault()}>
-                <HelpCircle />
-                <span>Help & Support</span>
-              </a>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              tooltip="Logout"
-              onClick={() => void logout()}
-              className="text-destructive hover:text-destructive"
-            >
-              <LogOut />
-              <span>Logout</span>
-            </SidebarMenuButton>
+            <UserMenu />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>
