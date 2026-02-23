@@ -2,7 +2,7 @@ import { useState, useMemo, useCallback } from 'react';
 import { PageHeader } from '@/components/shared/page-header';
 import { DataTable } from '@/components/data-table/data-table';
 import { useAudits } from '../hooks/use-audits';
-import { getAuditColumns } from '../components/audit-columns';
+import { auditColumns } from '../components/audit-columns';
 import { AuditTableToolbar } from '../components/audit-table-toolbar';
 import { AuditDetailDrawer } from '../components/audit-detail-drawer';
 import { usePagination } from '@/hooks/use-pagination';
@@ -31,13 +31,9 @@ export const AuditsPage = () => {
 
   const { data, isLoading, refetch } = useAudits(queryParams);
 
-  const columns = useMemo(
-    () =>
-      getAuditColumns({
-        onView: (audit) => setSelectedAudit(audit),
-      }),
-    [],
-  );
+  const handleRowClick = useCallback((audit: AuditLog) => {
+    setSelectedAudit(audit);
+  }, []);
 
   const handleFilterChange = useCallback(
     (key: string, value: string) => {
@@ -73,8 +69,9 @@ export const AuditsPage = () => {
       <PageHeader title="Audit Logs" description="Track all system activity." />
 
       <DataTable
-        columns={columns}
+        columns={auditColumns}
         data={data?.items ?? []}
+        onRowClick={handleRowClick}
         isLoading={isLoading}
         pagination={
           data

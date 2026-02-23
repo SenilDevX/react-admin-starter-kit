@@ -1,6 +1,5 @@
 import type { ColumnDef } from '@tanstack/react-table';
 import { DataTableHeader } from '@/components/data-table/data-table-header';
-import { DataTableRowActions } from '@/components/data-table/data-table-row-actions';
 import { StatusBadge } from '@/components/shared/status-badge';
 import { formatDateTime, capitalize } from '@/lib/format';
 import type { AuditLog, AuditAction } from '@/types';
@@ -11,16 +10,12 @@ const actionVariantMap: Record<AuditAction, { variant: 'info' | 'warning' | 'des
   deleted: { variant: 'destructive', label: 'Deleted' },
 };
 
-type AuditColumnActions = {
-  onView: (audit: AuditLog) => void;
-};
-
-export const getAuditColumns = ({ onView }: AuditColumnActions): ColumnDef<AuditLog>[] => [
+export const auditColumns: ColumnDef<AuditLog>[] = [
   {
     accessorKey: 'userName',
     header: ({ column }) => <DataTableHeader column={column} title="User Name" />,
     cell: ({ row }) => (
-      <span className="max-w-50 truncate font-medium">{row.getValue('userName') || '—'}</span>
+      <span className="max-w-50 truncate font-medium">{row.getValue('userName') || '-'}</span>
     ),
   },
   {
@@ -28,7 +23,7 @@ export const getAuditColumns = ({ onView }: AuditColumnActions): ColumnDef<Audit
     header: 'Email',
     cell: ({ row }) => (
       <span className="max-w-62.5 truncate text-muted-foreground">
-        {row.getValue('userEmail') || '—'}
+        {row.getValue('userEmail') || '-'}
       </span>
     ),
     enableSorting: false,
@@ -55,7 +50,7 @@ export const getAuditColumns = ({ onView }: AuditColumnActions): ColumnDef<Audit
     accessorKey: 'ipAddress',
     header: 'IP Address',
     cell: ({ row }) => (
-      <span className="text-muted-foreground">{row.getValue('ipAddress') || '—'}</span>
+      <span className="text-muted-foreground">{row.getValue('ipAddress') || '-'}</span>
     ),
     enableSorting: false,
   },
@@ -64,14 +59,6 @@ export const getAuditColumns = ({ onView }: AuditColumnActions): ColumnDef<Audit
     header: ({ column }) => <DataTableHeader column={column} title="Created" />,
     cell: ({ row }) => (
       <span className="text-muted-foreground">{formatDateTime(row.getValue('createdAt'))}</span>
-    ),
-  },
-  {
-    id: 'actions',
-    cell: ({ row }) => (
-      <div className="flex justify-end">
-        <DataTableRowActions onView={() => onView(row.original)} />
-      </div>
     ),
   },
 ];
