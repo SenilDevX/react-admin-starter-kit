@@ -20,13 +20,13 @@ import { formatDateTime } from '@/lib/format';
 import type { Todo } from '@/types';
 
 export const TodosPage = () => {
-  const { page, limit, setPage, setLimit } = usePagination();
   const [search, setSearch] = useState('');
-  const debouncedSearch = useDebounce(search);
   const [filters, setFilters] = useState<Record<string, string>>({});
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
-  // Dialog states
+  const { page, limit, setPage, setLimit } = usePagination();
+  const debouncedSearch = useDebounce(search);
+
   const [createOpen, setCreateOpen] = useState(false);
   const [editTodo, setEditTodo] = useState<Todo | null>(null);
   const [deleteTodo, setDeleteTodo] = useState<Todo | null>(null);

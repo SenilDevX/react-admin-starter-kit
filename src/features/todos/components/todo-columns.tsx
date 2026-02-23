@@ -37,14 +37,14 @@ export const getTodoColumns = ({ onEdit, onDelete }: TodoColumnActions): ColumnD
     accessorKey: 'title',
     header: ({ column }) => <DataTableHeader column={column} title="Title" />,
     cell: ({ row }) => (
-      <span className="max-w-[300px] truncate font-medium">{row.getValue('title')}</span>
+      <span className="max-w-75 truncate font-medium">{row.getValue('title')}</span>
     ),
   },
   {
     accessorKey: 'description',
     header: 'Description',
     cell: ({ row }) => (
-      <span className="max-w-[400px] truncate text-muted-foreground">
+      <span className="max-w-100 truncate text-muted-foreground">
         {row.getValue('description') || '—'}
       </span>
     ),
