@@ -12,7 +12,7 @@ export const Providers = ({ children }: { children: ReactNode }) => {
       <AuthProvider>
         <TooltipProvider>
           {children}
-          <Toaster position="top-right" richColors closeButton />
+          <Toaster position="top-right" closeButton={false} richColors/>
         </TooltipProvider>
       </AuthProvider>
       <ReactQueryDevtools initialIsOpen={false} />

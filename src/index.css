@@ -78,6 +78,18 @@
     --sidebar-accent-foreground: oklch(0.332 0.158 292);
     --sidebar-border: oklch(0.922 0.008 290);
     --sidebar-ring: oklch(0.432 0.208 292);
+    --toast-success-bg: hsl(150 40% 95%);
+    --toast-success-text: hsl(150 50% 20%);
+    --toast-success-border: hsl(150 30% 85%);
+    --toast-error-bg: hsl(10 50% 95%);
+    --toast-error-text: hsl(10 55% 28%);
+    --toast-error-border: hsl(10 35% 85%);
+    --toast-warning-bg: hsl(45 60% 95%);
+    --toast-warning-text: hsl(45 50% 28%);
+    --toast-warning-border: hsl(45 40% 85%);
+    --toast-info-bg: hsl(220 45% 95%);
+    --toast-info-text: hsl(220 50% 25%);
+    --toast-info-border: hsl(220 30% 85%);
 }
 
 .dark {
@@ -112,6 +124,18 @@
     --sidebar-accent-foreground: oklch(0.985 0 0);
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.65 0.22 292);
+    --toast-success-bg: hsl(155 25% 12%);
+    --toast-success-text: hsl(155 35% 78%);
+    --toast-success-border: hsl(155 20% 22%);
+    --toast-error-bg: hsl(10 30% 12%);
+    --toast-error-text: hsl(10 40% 78%);
+    --toast-error-border: hsl(10 25% 22%);
+    --toast-warning-bg: hsl(45 30% 12%);
+    --toast-warning-text: hsl(45 40% 78%);
+    --toast-warning-border: hsl(45 25% 22%);
+    --toast-info-bg: hsl(220 25% 12%);
+    --toast-info-text: hsl(220 35% 78%);
+    --toast-info-border: hsl(220 20% 22%);
 }
 
 @layer base {
