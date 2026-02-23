@@ -1,12 +1,13 @@
-import { lazy, Suspense } from 'react';
+import { lazy } from 'react';
 import { createBrowserRouter } from 'react-router';
 import { AuthLayout } from '@/components/layout/auth-layout';
 import { AppLayout } from '@/components/layout/app-layout';
 import { OnboardingLayout } from '@/components/layout/onboarding-layout';
 import { ProtectedRoute } from './protected-route';
 import { OnboardingGuard } from './onboarding-guard';
-import { LoadingSpinner } from '@/components/shared/loading-spinner';
 import { RouteErrorFallback } from '@/components/shared/route-error-fallback';
+import { LazyLoad } from '@/components/shared/lazy-load';
+import { NotFound } from '@/components/shared/not-found';
 
 const LoginPage = lazy(() =>
   import('@/features/auth/pages/login-page').then((m) => ({ default: m.LoginPage })),
@@ -60,58 +61,134 @@ const SettingsPage = lazy(() =>
   import('@/features/settings/pages/settings-page').then((m) => ({ default: m.SettingsPage })),
 );
 
-const Lazy = ({ children }: { children: React.ReactNode }) => (
-  <Suspense fallback={<LoadingSpinner />}>{children}</Suspense>
-);
-
-const NotFoundPage = () => (
-  <div className="flex h-screen flex-col items-center justify-center gap-2">
-    <h1 className="text-4xl font-bold text-primary">404</h1>
-    <p className="text-muted-foreground">Page not found</p>
-  </div>
-);
-
 export const router = createBrowserRouter([
-  // Public auth routes
   {
     element: <AuthLayout />,
     errorElement: <RouteErrorFallback />,
     children: [
-      { path: '/login', element: <Lazy><LoginPage /></Lazy> },
-      { path: '/register', element: <Lazy><RegisterPage /></Lazy> },
-      { path: '/forgot-password', element: <Lazy><ForgotPasswordPage /></Lazy> },
-      { path: '/reset-password', element: <Lazy><ResetPasswordPage /></Lazy> },
-      { path: '/2fa-verify', element: <Lazy><TwoFactorVerifyPage /></Lazy> },
+      {
+        path: '/login',
+        element: (
+          <LazyLoad>
+            <LoginPage />
+          </LazyLoad>
+        ),
+      },
+      {
+        path: '/register',
+        element: (
+          <LazyLoad>
+            <RegisterPage />
+          </LazyLoad>
+        ),
+      },
+      {
+        path: '/forgot-password',
+        element: (
+          <LazyLoad>
+            <ForgotPasswordPage />
+          </LazyLoad>
+        ),
+      },
+      {
+        path: '/reset-password',
+        element: (
+          <LazyLoad>
+            <ResetPasswordPage />
+          </LazyLoad>
+        ),
+      },
+      {
+        path: '/2fa-verify',
+        element: (
+          <LazyLoad>
+            <TwoFactorVerifyPage />
+          </LazyLoad>
+        ),
+      },
     ],
   },
 
-  // Protected routes
   {
     element: <ProtectedRoute />,
     errorElement: <RouteErrorFallback />,
     children: [
-      // Onboarding routes (forced flows)
       {
         element: <OnboardingLayout />,
         children: [
-          { path: '/onboarding/2fa-setup', element: <Lazy><Onboarding2faPage /></Lazy> },
-          { path: '/onboarding/change-password', element: <Lazy><OnboardingPasswordPage /></Lazy> },
+          {
+            path: '/onboarding/2fa-setup',
+            element: (
+              <LazyLoad>
+                <Onboarding2faPage />
+              </LazyLoad>
+            ),
+          },
+          {
+            path: '/onboarding/change-password',
+            element: (
+              <LazyLoad>
+                <OnboardingPasswordPage />
+              </LazyLoad>
+            ),
+          },
         ],
       },
 
-      // Main app routes (onboarded users only)
       {
         element: <OnboardingGuard />,
         children: [
           {
             element: <AppLayout />,
             children: [
-              { index: true, element: <Lazy><DashboardPage /></Lazy> },
-              { path: '/todos', element: <Lazy><TodosPage /></Lazy> },
-              { path: '/users', element: <Lazy><UsersPage /></Lazy> },
-              { path: '/roles', element: <Lazy><RolesPage /></Lazy> },
-              { path: '/audits', element: <Lazy><AuditsPage /></Lazy> },
-              { path: '/settings', element: <Lazy><SettingsPage /></Lazy> },
+              {
+                index: true,
+                element: (
+                  <LazyLoad>
+                    <DashboardPage />
+                  </LazyLoad>
+                ),
+              },
+              {
+                path: '/todos',
+                element: (
+                  <LazyLoad>
+                    <TodosPage />
+                  </LazyLoad>
+                ),
+              },
+              {
+                path: '/users',
+                element: (
+                  <LazyLoad>
+                    <UsersPage />
+                  </LazyLoad>
+                ),
+              },
+              {
+                path: '/roles',
+                element: (
+                  <LazyLoad>
+                    <RolesPage />
+                  </LazyLoad>
+                ),
+              },
+              {
+                path: '/audits',
+                element: (
+                  <LazyLoad>
+                    <AuditsPage />
+                  </LazyLoad>
+                ),
+              },
+              {
+                path: '/settings',
+                element: (
+                  <LazyLoad>
+                    <SettingsPage />
+                  </LazyLoad>
+                ),
+              },
             ],
           },
         ],
@@ -119,6 +196,5 @@ export const router = createBrowserRouter([
     ],
   },
 
-  // 404
-  { path: '*', element: <NotFoundPage /> },
+  { path: '*', element: <NotFound /> },
 ]);
