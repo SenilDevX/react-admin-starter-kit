@@ -1,11 +1,12 @@
 import { PageHeader } from '@/components/shared/page-header';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuthStore } from '@/stores/auth-store';
+import { ProfileForm } from '../components/profile-form';
 import { ChangePasswordForm } from '../components/change-password-form';
 import { ChangeEmailForm } from '../components/change-email-form';
 import { TwoFactorSetupCard } from '../components/two-factor-setup-card';
 import { TwoFactorDisableCard } from '../components/two-factor-disable-card';
-import { Lock, Mail, ShieldCheck } from 'lucide-react';
+import { UserRound, Lock, Mail, ShieldCheck } from 'lucide-react';
 
 export const SettingsPage = () => {
   const { user } = useAuthStore();
@@ -13,8 +14,12 @@ export const SettingsPage = () => {
   return (
     <div>
       <PageHeader title="Settings" description="Manage your account settings." />
-      <Tabs defaultValue="password">
+      <Tabs defaultValue="profile">
         <TabsList>
+          <TabsTrigger value="profile">
+            <UserRound className="h-4 w-4" />
+            Profile
+          </TabsTrigger>
           <TabsTrigger value="password">
             <Lock className="h-4 w-4" />
             Password
@@ -28,6 +33,9 @@ export const SettingsPage = () => {
             Two-Factor Auth
           </TabsTrigger>
         </TabsList>
+        <TabsContent value="profile" className="mt-6">
+          <ProfileForm />
+        </TabsContent>
         <TabsContent value="password" className="mt-6">
           <ChangePasswordForm />
         </TabsContent>

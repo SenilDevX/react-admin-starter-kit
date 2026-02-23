@@ -34,6 +34,11 @@ export type ChangeEmailRequest = {
   password: string;
 };
 
+export type UpdateProfileRequest = {
+  firstName: string;
+  lastName: string;
+};
+
 export type MessageResponse = {
   message: string;
 };

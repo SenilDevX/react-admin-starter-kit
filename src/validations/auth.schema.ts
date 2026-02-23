@@ -34,6 +34,11 @@ export const resetPasswordSchema = z
     path: ['confirmPassword'],
   });
 
+export const updateProfileSchema = z.object({
+  firstName: z.string().min(1, 'First name is required'),
+  lastName: z.string().min(1, 'Last name is required'),
+});
+
 export const changePasswordSchema = z.object({
   currentPassword: z.string().min(1, 'Current password is required'),
   newPassword: passwordSchema,
@@ -63,6 +68,7 @@ export type LoginFormValues = z.infer<typeof loginSchema>;
 export type RegisterFormValues = z.infer<typeof registerSchema>;
 export type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
+export type UpdateProfileFormValues = z.infer<typeof updateProfileSchema>;
 export type ChangePasswordFormValues = z.infer<typeof changePasswordSchema>;
 export type ChangeEmailFormValues = z.infer<typeof changeEmailSchema>;
 export type VerifyOtpFormValues = z.infer<typeof verifyOtpSchema>;

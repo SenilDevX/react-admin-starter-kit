@@ -8,6 +8,7 @@ import type {
   ResetPasswordRequest,
   ChangePasswordRequest,
   ChangeEmailRequest,
+  UpdateProfileRequest,
   VerifyOtpRequest,
   DisableTwoFactorRequest,
   TwoFactorSetupResponse,
@@ -40,6 +41,9 @@ export const authService = {
 
   changeEmail: (data: ChangeEmailRequest) =>
     api.post<unknown, MessageResponse>(API_ENDPOINTS.AUTH.CHANGE_EMAIL, data),
+
+  updateProfile: (data: UpdateProfileRequest) =>
+    api.patch<unknown, MessageResponse>(API_ENDPOINTS.AUTH.UPDATE_PROFILE, data),
 
   setupTwoFactor: () => api.post<unknown, TwoFactorSetupResponse>(API_ENDPOINTS.AUTH.TWO_FACTOR_SETUP),
 

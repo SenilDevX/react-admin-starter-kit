@@ -10,6 +10,7 @@ export const API_ENDPOINTS = {
     RESET_PASSWORD: '/auth/reset-password',
     CHANGE_PASSWORD: '/auth/change-password',
     CHANGE_EMAIL: '/auth/change-email',
+    UPDATE_PROFILE: '/auth/update-profile',
     TWO_FACTOR_SETUP: '/auth/2fa/setup',
     TWO_FACTOR_CONFIRM: '/auth/2fa/confirm',
     TWO_FACTOR_AUTHENTICATE: '/auth/2fa/authenticate',
