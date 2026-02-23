@@ -1,7 +1,5 @@
-import { useNavigate } from 'react-router';
-import { Settings, LogOut, ChevronsUpDown } from 'lucide-react';
+import {  LogOut, ChevronsUpDown } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth-store';
-import { ROUTES } from '@/lib/constants';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
   DropdownMenu,
@@ -16,7 +14,6 @@ import { SidebarMenuButton, useSidebar } from '@/components/ui/sidebar';
 export const UserMenu = () => {
   const { user, logout } = useAuthStore();
   const { isMobile } = useSidebar();
-  const navigate = useNavigate();
 
   if (!user) return null;
 
@@ -69,11 +66,6 @@ export const UserMenu = () => {
             </div>
           </div>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => void navigate(ROUTES.SETTINGS)}>
-          <Settings />
-          Settings
-        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           className="text-destructive focus:text-destructive"
