@@ -1,12 +1,14 @@
-import { Outlet } from 'react-router';
+import type { ReactNode } from 'react';
 import { usePermissions } from '@/hooks/use-permissions';
 import { ShieldAlert } from 'lucide-react';
 
-type PermissionRouteProps = {
+export const PermissionGuard = ({
+  permission,
+  children,
+}: {
   permission: string;
-};
-
-export const PermissionRoute = ({ permission }: PermissionRouteProps) => {
+  children: ReactNode;
+}) => {
   const { hasPermission } = usePermissions();
 
   if (!hasPermission(permission)) {
@@ -23,5 +25,5 @@ export const PermissionRoute = ({ permission }: PermissionRouteProps) => {
     );
   }
 
-  return <Outlet />;
+  return children;
 };
