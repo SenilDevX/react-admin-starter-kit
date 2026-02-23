@@ -20,7 +20,7 @@ export const getAuditColumns = ({ onView }: AuditColumnActions): ColumnDef<Audit
     accessorKey: 'userName',
     header: ({ column }) => <DataTableHeader column={column} title="User Name" />,
     cell: ({ row }) => (
-      <span className="max-w-50 truncate font-medium">{row.getValue('userName')}</span>
+      <span className="max-w-50 truncate font-medium">{row.getValue('userName') || '—'}</span>
     ),
   },
   {
@@ -28,7 +28,7 @@ export const getAuditColumns = ({ onView }: AuditColumnActions): ColumnDef<Audit
     header: 'Email',
     cell: ({ row }) => (
       <span className="max-w-62.5 truncate text-muted-foreground">
-        {row.getValue('userEmail')}
+        {row.getValue('userEmail') || '—'}
       </span>
     ),
     enableSorting: false,
@@ -55,7 +55,7 @@ export const getAuditColumns = ({ onView }: AuditColumnActions): ColumnDef<Audit
     accessorKey: 'ipAddress',
     header: 'IP Address',
     cell: ({ row }) => (
-      <span className="text-muted-foreground">{row.getValue('ipAddress')}</span>
+      <span className="text-muted-foreground">{row.getValue('ipAddress') || '—'}</span>
     ),
     enableSorting: false,
   },
@@ -69,7 +69,9 @@ export const getAuditColumns = ({ onView }: AuditColumnActions): ColumnDef<Audit
   {
     id: 'actions',
     cell: ({ row }) => (
-      <DataTableRowActions onView={() => onView(row.original)} />
+      <div className="flex justify-end">
+        <DataTableRowActions onView={() => onView(row.original)} />
+      </div>
     ),
   },
 ];

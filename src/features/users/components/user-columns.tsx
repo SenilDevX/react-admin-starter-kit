@@ -1,17 +1,18 @@
 import type { ColumnDef } from '@tanstack/react-table';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Switch } from '@/components/ui/switch';
 import { DataTableHeader } from '@/components/data-table/data-table-header';
 import { DataTableRowActions } from '@/components/data-table/data-table-row-actions';
-import { StatusBadge } from '@/components/shared/status-badge';
 import { formatDateTime } from '@/lib/format';
 import type { User } from '@/types';
 
 type UserColumnActions = {
   onEdit: (user: User) => void;
   onDelete: (user: User) => void;
+  onToggle2FA: (user: User, enabled: boolean) => void;
 };
 
-export const getUserColumns = ({ onEdit, onDelete }: UserColumnActions): ColumnDef<User>[] => [
+export const getUserColumns = ({ onEdit, onDelete, onToggle2FA }: UserColumnActions): ColumnDef<User>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -34,25 +35,26 @@ export const getUserColumns = ({ onEdit, onDelete }: UserColumnActions): ColumnD
     id: 'name',
     accessorFn: (row) => `${row.firstName ?? ''} ${row.lastName ?? ''}`.trim(),
     header: ({ column }) => <DataTableHeader column={column} title="Name" />,
-    cell: ({ row }) => (
-      <span className="max-w-50 truncate font-medium">
-        {row.original.firstName ?? ''} {row.original.lastName ?? ''}
-      </span>
-    ),
+    cell: ({ row }) => {
+      const name = `${row.original.firstName ?? ''} ${row.original.lastName ?? ''}`.trim();
+      return <span className="max-w-50 truncate font-medium">{name || '—'}</span>;
+    },
   },
   {
     accessorKey: 'email',
     header: ({ column }) => <DataTableHeader column={column} title="Email" />,
     cell: ({ row }) => (
-      <span className="max-w-62.5 truncate text-muted-foreground">{row.getValue('email')}</span>
+      <span className="max-w-62.5 truncate text-muted-foreground">
+        {row.getValue('email') || '—'}
+      </span>
     ),
   },
   {
     id: 'role',
-    accessorFn: (row) => row.roleId?.name ?? 'No role',
+    accessorFn: (row) => row.roleId?.name ?? '—',
     header: ({ column }) => <DataTableHeader column={column} title="Role" />,
     cell: ({ row }) => (
-      <span className="text-muted-foreground">{row.original.roleId?.name ?? 'No role'}</span>
+      <span className="text-muted-foreground">{row.original.roleId?.name ?? '—'}</span>
     ),
   },
   {
@@ -60,9 +62,10 @@ export const getUserColumns = ({ onEdit, onDelete }: UserColumnActions): ColumnD
     accessorFn: (row) => row.isTwoFactorEnabled,
     header: '2FA',
     cell: ({ row }) => (
-      <StatusBadge
-        status={row.original.isTwoFactorEnabled ? 'Enabled' : 'Disabled'}
-        variant={row.original.isTwoFactorEnabled ? 'success' : 'default'}
+      <Switch
+        size="sm"
+        checked={row.original.isTwoFactorEnabled}
+        onCheckedChange={(checked) => onToggle2FA(row.original, checked)}
       />
     ),
   },
@@ -70,7 +73,9 @@ export const getUserColumns = ({ onEdit, onDelete }: UserColumnActions): ColumnD
     accessorKey: 'createdAt',
     header: ({ column }) => <DataTableHeader column={column} title="Created" />,
     cell: ({ row }) => (
-      <span className="text-muted-foreground">{formatDateTime(row.getValue('createdAt'))}</span>
+      <span className="text-muted-foreground">
+        {formatDateTime(row.getValue('createdAt')) || '—'}
+      </span>
     ),
   },
   {
