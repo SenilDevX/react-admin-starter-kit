@@ -1,6 +1,7 @@
 import type { LucideIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { InboxIcon } from 'lucide-react';
+import { motion } from 'motion/react';
 
 type EmptyStateProps = {
   icon?: LucideIcon;
@@ -16,13 +17,18 @@ export const EmptyState = ({
   children,
 }: EmptyStateProps) => {
   return (
-    <div className="flex flex-col items-center justify-center gap-3 py-16">
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.25, ease: 'easeOut' }}
+      className="flex flex-col items-center justify-center gap-3 py-16"
+    >
       <Icon className="h-12 w-12 text-muted-foreground/40" />
       <div className="text-center">
         <h3 className="text-sm font-medium">{title}</h3>
         <p className="mt-1 text-sm text-muted-foreground">{description}</p>
       </div>
       {children && <div className="mt-2">{children}</div>}
-    </div>
+    </motion.div>
   );
 };

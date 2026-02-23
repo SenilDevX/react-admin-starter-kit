@@ -1,5 +1,5 @@
 import { PageHeader } from '@/components/shared/page-header';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent, TabsContents, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuthStore } from '@/stores/auth-store';
 import { ProfileForm } from '../components/profile-form';
 import { ChangePasswordForm } from '../components/change-password-form';
@@ -33,18 +33,20 @@ export const SettingsPage = () => {
             Two-Factor Auth
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="profile" className="mt-6">
-          <ProfileForm />
-        </TabsContent>
-        <TabsContent value="password" className="mt-6">
-          <ChangePasswordForm />
-        </TabsContent>
-        <TabsContent value="email" className="mt-6">
-          <ChangeEmailForm />
-        </TabsContent>
-        <TabsContent value="two-factor" className="mt-6">
-          {user?.isTwoFactorEnabled ? <TwoFactorDisableCard /> : <TwoFactorSetupCard />}
-        </TabsContent>
+        <TabsContents className="mt-6">
+          <TabsContent value="profile">
+            <ProfileForm />
+          </TabsContent>
+          <TabsContent value="password">
+            <ChangePasswordForm />
+          </TabsContent>
+          <TabsContent value="email">
+            <ChangeEmailForm />
+          </TabsContent>
+          <TabsContent value="two-factor">
+            {user?.isTwoFactorEnabled ? <TwoFactorDisableCard /> : <TwoFactorSetupCard />}
+          </TabsContent>
+        </TabsContents>
       </Tabs>
     </div>
   );

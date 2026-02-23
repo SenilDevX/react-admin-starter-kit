@@ -1,47 +1,152 @@
+"use client"
+
 import * as React from "react"
 import { Popover as PopoverPrimitive } from "radix-ui"
+import { AnimatePresence, motion, type HTMLMotionProps } from "motion/react"
 
 import { cn } from "@/lib/utils"
+import { getStrictContext } from "@/lib/get-strict-context"
+import { useControlledState } from "@/hooks/use-controlled-state"
 
-function Popover({
-  ...props
-}: React.ComponentProps<typeof PopoverPrimitive.Root>) {
-  return <PopoverPrimitive.Root data-slot="popover" {...props} />
+// --- Context ---
+
+type PopoverContextType = {
+  isOpen: boolean
+  setIsOpen: (isOpen: boolean) => void
 }
 
-function PopoverTrigger({
-  ...props
-}: React.ComponentProps<typeof PopoverPrimitive.Trigger>) {
+const [PopoverProvider, usePopover] =
+  getStrictContext<PopoverContextType>("PopoverContext")
+
+// --- Root ---
+
+function Popover(props: React.ComponentProps<typeof PopoverPrimitive.Root>) {
+  const [isOpen, setIsOpen] = useControlledState({
+    value: props?.open,
+    defaultValue: props?.defaultOpen,
+    onChange: props?.onOpenChange,
+  })
+
+  return (
+    <PopoverProvider value={{ isOpen, setIsOpen }}>
+      <PopoverPrimitive.Root
+        data-slot="popover"
+        {...props}
+        onOpenChange={setIsOpen}
+      />
+    </PopoverProvider>
+  )
+}
+
+// --- Trigger ---
+
+function PopoverTrigger(
+  props: React.ComponentProps<typeof PopoverPrimitive.Trigger>
+) {
   return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />
 }
+
+// --- Portal ---
+
+function PopoverPortal(
+  props: Omit<
+    React.ComponentProps<typeof PopoverPrimitive.Portal>,
+    "forceMount"
+  >
+) {
+  const { isOpen } = usePopover()
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <PopoverPrimitive.Portal
+          forceMount
+          data-slot="popover-portal"
+          {...props}
+        />
+      )}
+    </AnimatePresence>
+  )
+}
+
+// --- Content ---
+
+type PopoverContentProps = Omit<
+  React.ComponentProps<typeof PopoverPrimitive.Content>,
+  "forceMount" | "asChild"
+> &
+  HTMLMotionProps<"div">
 
 function PopoverContent({
   className,
   align = "center",
   sideOffset = 4,
+  onOpenAutoFocus,
+  onCloseAutoFocus,
+  onEscapeKeyDown,
+  onPointerDownOutside,
+  onFocusOutside,
+  onInteractOutside,
+  alignOffset,
+  side,
+  avoidCollisions,
+  collisionBoundary,
+  collisionPadding,
+  arrowPadding,
+  sticky,
+  hideWhenDetached,
+  transition = { type: "spring", stiffness: 300, damping: 25 },
   ...props
-}: React.ComponentProps<typeof PopoverPrimitive.Content>) {
+}: PopoverContentProps) {
   return (
-    <PopoverPrimitive.Portal>
+    <PopoverPortal>
       <PopoverPrimitive.Content
-        data-slot="popover-content"
+        asChild
+        forceMount
         align={align}
+        alignOffset={alignOffset}
+        side={side}
         sideOffset={sideOffset}
-        className={cn(
-          "bg-popover text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 w-72 origin-(--radix-popover-content-transform-origin) rounded-md border p-4 shadow-md outline-hidden",
-          className
-        )}
-        {...props}
-      />
-    </PopoverPrimitive.Portal>
+        avoidCollisions={avoidCollisions}
+        collisionBoundary={collisionBoundary}
+        collisionPadding={collisionPadding}
+        arrowPadding={arrowPadding}
+        sticky={sticky}
+        hideWhenDetached={hideWhenDetached}
+        onOpenAutoFocus={onOpenAutoFocus}
+        onCloseAutoFocus={onCloseAutoFocus}
+        onEscapeKeyDown={onEscapeKeyDown}
+        onPointerDownOutside={onPointerDownOutside}
+        onInteractOutside={onInteractOutside}
+        onFocusOutside={onFocusOutside}
+      >
+        <motion.div
+          key="popover-content"
+          data-slot="popover-content"
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.5 }}
+          transition={transition}
+          className={cn(
+            "bg-popover text-popover-foreground z-50 w-72 origin-(--radix-popover-content-transform-origin) rounded-md border p-4 shadow-md outline-hidden",
+            className
+          )}
+          {...props}
+        />
+      </PopoverPrimitive.Content>
+    </PopoverPortal>
   )
 }
 
-function PopoverAnchor({
-  ...props
-}: React.ComponentProps<typeof PopoverPrimitive.Anchor>) {
+// --- Anchor ---
+
+function PopoverAnchor(
+  props: React.ComponentProps<typeof PopoverPrimitive.Anchor>
+) {
   return <PopoverPrimitive.Anchor data-slot="popover-anchor" {...props} />
 }
+
+// --- Layout helpers (kept from your existing file) ---
 
 function PopoverHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (

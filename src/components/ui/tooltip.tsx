@@ -1,7 +1,22 @@
+'use client';
+
 import * as React from 'react';
 import { Tooltip as TooltipPrimitive } from 'radix-ui';
+import { AnimatePresence, motion } from 'motion/react';
 
 import { cn } from '@/lib/utils';
+import { getStrictContext } from '@/lib/get-strict-context';
+import { useControlledState } from '@/hooks/use-controlled-state';
+
+// --- Context ---
+
+type TooltipContextType = {
+  isOpen: boolean;
+};
+
+const [TooltipCtxProvider, useTooltipCtx] = getStrictContext<TooltipContextType>('TooltipContext');
+
+// --- Provider ---
 
 function TooltipProvider({
   delayDuration = 0,
@@ -16,13 +31,34 @@ function TooltipProvider({
   );
 }
 
-function Tooltip({ ...props }: React.ComponentProps<typeof TooltipPrimitive.Root>) {
-  return <TooltipPrimitive.Root data-slot="tooltip" {...props} />;
+// --- Root ---
+
+function Tooltip(props: React.ComponentProps<typeof TooltipPrimitive.Root>) {
+  const [isOpen, setIsOpen] = useControlledState({
+    value: props.open,
+    defaultValue: props.defaultOpen,
+    onChange: props.onOpenChange,
+  });
+
+  return (
+    <TooltipCtxProvider value={{ isOpen }}>
+      <TooltipPrimitive.Root
+        data-slot="tooltip"
+        {...props}
+        open={isOpen}
+        onOpenChange={setIsOpen}
+      />
+    </TooltipCtxProvider>
+  );
 }
 
-function TooltipTrigger({ ...props }: React.ComponentProps<typeof TooltipPrimitive.Trigger>) {
+// --- Trigger ---
+
+function TooltipTrigger(props: React.ComponentProps<typeof TooltipPrimitive.Trigger>) {
   return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />;
 }
+
+// --- Content ---
 
 function TooltipContent({
   className,
@@ -30,21 +66,36 @@ function TooltipContent({
   children,
   ...props
 }: React.ComponentProps<typeof TooltipPrimitive.Content>) {
+  const { isOpen } = useTooltipCtx();
+
   return (
-    <TooltipPrimitive.Portal>
-      <TooltipPrimitive.Content
-        data-slot="tooltip-content"
-        sideOffset={sideOffset}
-        className={cn(
-          'bg-foreground text-background animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 w-fit origin-(--radix-tooltip-content-transform-origin) rounded-md px-3 py-1.5 text-xs text-balance',
-          className,
-        )}
-        {...props}
-      >
-        {children}
-        <TooltipPrimitive.Arrow className="bg-foreground fill-foreground z-50 size-2.5 translate-y-[calc(-50%-2px)]] rotate-45 rounded-[2px]" />
-      </TooltipPrimitive.Content>
-    </TooltipPrimitive.Portal>
+    <AnimatePresence>
+      {isOpen && (
+        <TooltipPrimitive.Portal forceMount>
+          <TooltipPrimitive.Content
+            data-slot="tooltip-content"
+            sideOffset={sideOffset}
+            asChild
+            forceMount
+            {...props}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.1, ease: 'easeOut' }}
+              className={cn(
+                'bg-foreground text-background z-50 w-fit origin-(--radix-tooltip-content-transform-origin) rounded-md px-3 py-1.5 text-xs text-balance',
+                className,
+              )}
+            >
+              {children}
+              <TooltipPrimitive.Arrow className="bg-foreground fill-foreground z-50 size-2.5 translate-y-[calc(-50%-2px)]] rotate-45 rounded-[2px]" />
+            </motion.div>
+          </TooltipPrimitive.Content>
+        </TooltipPrimitive.Portal>
+      )}
+    </AnimatePresence>
   );
 }
 

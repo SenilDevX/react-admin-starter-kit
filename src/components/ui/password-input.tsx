@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Eye, EyeOff } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
 import { cn } from '@/lib/utils';
 import { Button } from './button';
 import { Input } from './input';
@@ -26,7 +27,18 @@ const PasswordInput = React.forwardRef<
         onClick={() => setShowPassword((prev) => !prev)}
         tabIndex={-1}
       >
-        {showPassword ? <EyeOff /> : <Eye />}
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.span
+            key={showPassword ? 'hide' : 'show'}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.1 }}
+            className="inline-flex items-center justify-center"
+          >
+            {showPassword ? <EyeOff /> : <Eye />}
+          </motion.span>
+        </AnimatePresence>
         <span className="sr-only">{showPassword ? 'Hide password' : 'Show password'}</span>
       </Button>
     </div>
