@@ -57,14 +57,18 @@ export const AppSidebar = () => {
   return (
     <SidebarRoot side="left" collapsible="icon">
       <SidebarHeader>
-        <div className="flex h-8 items-center gap-2 px-2">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-            <LayoutDashboard className="h-4 w-4" />
-          </div>
-          <span className="text-lg font-bold truncate group-data-[collapsible=icon]:hidden">
-            GPMS Enterprise
-          </span>
-        </div>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="lg" asChild>
+              <Link to={ROUTES.DASHBOARD}>
+                <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+                  <LayoutDashboard className="size-4" />
+                </div>
+                <span className="text-lg font-bold truncate">GPMS Enterprise</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarHeader>
 
       <SidebarContent>
