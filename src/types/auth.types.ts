@@ -64,6 +64,7 @@ export type UserProfile = {
     id: string;
     name: string;
     permissions: string[];
+    requiresTwoFactor: boolean;
   } | null;
   createdAt: string;
 };
