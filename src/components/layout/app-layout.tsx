@@ -10,7 +10,7 @@ export const AppLayout = () => {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset>
+      <SidebarInset className="h-svh overflow-hidden">
         <Header />
         <main className="flex-1 overflow-auto bg-background p-6">
           <Outlet />
