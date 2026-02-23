@@ -119,10 +119,11 @@ export const getRoleColumns = ({ onEdit, onDelete }: RoleColumnActions): ColumnD
     id: 'actions',
     cell: ({ row }) => {
       const role = row.original;
+      if (role.isSystem) return null;
       return (
         <div className="flex justify-end">
           <DataTableRowActions
-            onEdit={() => onEdit(role)}
+            onEdit={role.isSystem ? undefined : () => onEdit(role)}
             onDelete={role.isSystem ? undefined : () => onDelete(role)}
           />
         </div>

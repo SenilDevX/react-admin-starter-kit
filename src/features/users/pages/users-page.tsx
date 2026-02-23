@@ -12,6 +12,7 @@ import { useDeleteUser, useUpdateUser } from '../hooks/use-user-mutations';
 import { getUserColumns } from '../components/user-columns';
 import { UserTableToolbar } from '../components/user-table-toolbar';
 import { useDialogStore, DIALOG_KEY } from '@/stores/dialog-store';
+import { useAuthStore } from '@/stores/auth-store';
 import { UserEditDialog } from '../components/user-edit-dialog';
 import { usePagination } from '@/hooks/use-pagination';
 import { useDebounce } from '@/hooks/use-debounce';
@@ -29,6 +30,7 @@ export const UsersPage = () => {
   const { sorting, setSorting, sortBy, sortOrder } = useSorting();
 
   const { openDialog } = useDialogStore();
+  const currentUserId = useAuthStore((s) => s.user?.id);
   const [editUser, setEditUser] = useState<User | null>(null);
   const [deleteUser, setDeleteUser] = useState<User | null>(null);
 
@@ -61,8 +63,9 @@ export const UsersPage = () => {
         onEdit: setEditUser,
         onDelete: setDeleteUser,
         onToggle2FA: handleToggle2FA,
+        currentUserId,
       }),
-    [setEditUser, setDeleteUser, handleToggle2FA],
+    [setEditUser, setDeleteUser, handleToggle2FA, currentUserId],
   );
 
   const handleFilterChange = useCallback(

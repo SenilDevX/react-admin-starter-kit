@@ -10,9 +10,15 @@ type UserColumnActions = {
   onEdit: (user: User) => void;
   onDelete: (user: User) => void;
   onToggle2FA: (user: User, enabled: boolean) => void;
+  currentUserId?: string;
 };
 
-export const getUserColumns = ({ onEdit, onDelete, onToggle2FA }: UserColumnActions): ColumnDef<User>[] => [
+export const getUserColumns = ({
+  onEdit,
+  onDelete,
+  onToggle2FA,
+  currentUserId,
+}: UserColumnActions): ColumnDef<User>[] => [
   {
     id: 'select',
     header: ({ table }) => (
@@ -87,13 +93,17 @@ export const getUserColumns = ({ onEdit, onDelete, onToggle2FA }: UserColumnActi
   },
   {
     id: 'actions',
-    cell: ({ row }) => (
-      <div className="flex justify-end">
-        <DataTableRowActions
-          onEdit={() => onEdit(row.original)}
-          onDelete={() => onDelete(row.original)}
-        />
-      </div>
-    ),
+    cell: ({ row }) => {
+      const isSelf = row.original._id === currentUserId;
+      if (isSelf) return null;
+      return (
+        <div className="flex justify-end">
+          <DataTableRowActions
+            onEdit={isSelf ? undefined : () => onEdit(row.original)}
+            onDelete={isSelf ? undefined : () => onDelete(row.original)}
+          />
+        </div>
+      );
+    },
   },
 ];
