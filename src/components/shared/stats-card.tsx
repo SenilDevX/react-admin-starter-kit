@@ -15,33 +15,44 @@ type StatsCardProps = {
   variant?: 'default' | 'alert';
 };
 
-export const StatsCard = ({ title, value, icon: Icon, trend, variant = 'default' }: StatsCardProps) => {
+export const StatsCard = ({
+  title,
+  value,
+  icon: Icon,
+  trend,
+  variant = 'default',
+}: StatsCardProps) => {
   return (
     <Card
       className={cn(
-        'relative overflow-hidden',
+        'relative overflow-hidden py-0',
         variant === 'alert' && 'border-destructive/20 bg-destructive/5',
       )}
     >
-      <CardContent className="p-5">
+      <CardContent className="px-0 p-4.5 space-y-3">
         <div className="flex items-center justify-between">
-          <p className="text-sm font-medium text-muted-foreground">{title}</p>
+          <p className={cn("text-sm font-medium text-muted-foreground min-h-5", variant === 'alert' && 'text-destructive')}>{title}</p>
           <Icon
             className={cn(
-              'h-4 w-4',
-              variant === 'alert' ? 'text-destructive' : 'text-muted-foreground',
+              'size-4',
+              variant === 'alert' ? 'text-destructive' : 'text-muted-foreground/60',
             )}
           />
         </div>
-        <p className={cn('mt-2 text-2xl font-bold', variant === 'alert' && 'text-destructive')}>
+        <p
+          className={cn(
+            'text-2xl font-bold leading-9 tracking-tight min-h-8',
+            variant === 'alert' && 'text-destructive',
+          )}
+        >
           {value}
         </p>
         {trend && (
-          <div className="mt-2 flex items-center gap-1 text-xs">
+          <div className="flex items-center min-h-4 gap-1 text-xs">
             {trend.isPositive ? (
-              <TrendingUp className="h-3 w-3 text-emerald-600" />
+              <TrendingUp className="size-3 text-emerald-600" />
             ) : (
-              <TrendingDown className="h-3 w-3 text-red-600" />
+              <TrendingDown className="size-3 text-red-600" />
             )}
             <span className={trend.isPositive ? 'text-emerald-600' : 'text-red-600'}>
               {trend.value}

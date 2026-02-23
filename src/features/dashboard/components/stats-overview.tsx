@@ -19,21 +19,43 @@ export const StatsOverview = ({ stats, isLoading }: StatsOverviewProps) => {
         title="Total Todos"
         value={stats?.totalTodos ?? 0}
         icon={ListTodo}
+        trend={{
+          value: '8.4%',
+          label: 'vs Last Year',
+          isPositive: true,
+        }}
+
       />
       <StatsCard
         title="Total Users"
         value={stats?.totalUsers ?? 0}
         icon={Users}
+        trend={{
+          value: '200%',
+          label: 'vs Last Year',
+          isPositive: true,
+        }}
       />
       <StatsCard
         title="Total Roles"
         value={stats?.totalRoles ?? 0}
         icon={Shield}
+        trend={{
+          value: '74%',
+          label: 'vs Last Year',
+          isPositive: true,
+        }}
       />
       <StatsCard
         title="Total Audits"
         value={stats?.totalAudits ?? 0}
         icon={FileText}
+        variant='alert'
+        trend={{
+          value: '8.4',
+          label: 'vs Last Year',
+          isPositive: false,
+        }}
       />
     </div>
   );

@@ -16,14 +16,11 @@ export const DashboardPage = () => {
 
       <StatsOverview stats={stats} isLoading={isLoading} />
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-7">
-        <div className="lg:col-span-4">
-          <BarChartCard stats={stats} />
-        </div>
-        <div className="lg:col-span-3">
-          <RecentActivity />
-        </div>
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <BarChartCard stats={stats} />
       </div>
+
+      <RecentActivity />
     </div>
   );
 };
