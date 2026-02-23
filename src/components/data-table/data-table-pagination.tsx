@@ -47,7 +47,7 @@ export const DataTablePagination = ({
         <div className="flex items-center gap-2">
           <p className="text-sm font-medium">Rows per page</p>
           <Select value={String(limit)} onValueChange={(val) => onLimitChange(Number(val))}>
-            <SelectTrigger className="h-8 w-[70px]">
+            <SelectTrigger className="h-8 w-17.5">
               <SelectValue placeholder={String(limit)} />
             </SelectTrigger>
             <SelectContent>

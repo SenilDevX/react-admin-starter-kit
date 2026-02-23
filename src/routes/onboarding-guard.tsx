@@ -7,7 +7,6 @@ export const OnboardingGuard = () => {
 
   if (!user) return null;
 
-  // Priority: 2FA setup first, then password change
   if (user.mustSetupTwoFactor) {
     return <Navigate to={ROUTES.ONBOARDING_2FA} replace />;
   }

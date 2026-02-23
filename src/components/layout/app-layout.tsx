@@ -11,10 +11,10 @@ export const AppLayout = () => {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-          <Header />
-          <main className="flex-1 overflow-auto bg-background p-6">
-            <Outlet />
-          </main>
+        <Header />
+        <main className="flex-1 overflow-auto bg-background p-6">
+          <Outlet />
+        </main>
       </SidebarInset>
     </SidebarProvider>
   );

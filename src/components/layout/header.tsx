@@ -9,15 +9,12 @@ export const Header = () => {
   return (
     <header className="flex h-16 items-center gap-2 border-b bg-card px-4">
       <SidebarTrigger className="-ml-1" />
-      <Separator orientation="vertical" className="mr-2 !h-4" />
+      <Separator orientation="vertical" className="mr-2 h-4!" />
 
       {/* Search */}
       <div className="relative w-full max-w-md">
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-        <Input
-          placeholder="Search properties, leases, records..."
-          className="pl-9"
-        />
+        <Input placeholder="Search properties, leases, records..." className="pl-9" />
       </div>
 
       {/* Actions */}
