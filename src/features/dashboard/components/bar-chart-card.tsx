@@ -11,7 +11,7 @@ import type { DashboardStats } from '@/services/dashboard.service';
 const chartConfig = {
   value: {
     label: 'Count',
-    color: 'hsl(var(--primary))',
+    color: 'var(--primary)',
   },
 } satisfies ChartConfig;
 
