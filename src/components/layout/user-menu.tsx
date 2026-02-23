@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router';
-import { Settings, LogOut, HelpCircle, ChevronsUpDown } from 'lucide-react';
+import { Settings, LogOut, ChevronsUpDown } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth-store';
 import { ROUTES } from '@/lib/constants';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';

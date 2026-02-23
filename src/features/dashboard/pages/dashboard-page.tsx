@@ -3,7 +3,6 @@ import { useDashboardStats } from '../hooks/use-dashboard-stats';
 import { StatsOverview } from '../components/stats-overview';
 import { BarChartCard } from '../components/bar-chart-card';
 import { RecentActivity } from '../components/recent-activity';
-import { LineChartCard } from '../components/line-chart-card';
 
 export const DashboardPage = () => {
   const { data: stats, isLoading } = useDashboardStats();
@@ -25,8 +24,6 @@ export const DashboardPage = () => {
           <RecentActivity />
         </div>
       </div>
-
-      <LineChartCard />
     </div>
   );
 };
