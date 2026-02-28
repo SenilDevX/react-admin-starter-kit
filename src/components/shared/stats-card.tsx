@@ -53,19 +53,21 @@ export const StatsCard = ({
           >
             {value}
           </p>
-          {trend && (
-            <div className="flex items-center min-h-4 gap-1 text-xs">
-              {trend.isPositive ? (
-                <TrendingUp className="size-3 text-emerald-600" />
-              ) : (
-                <TrendingDown className="size-3 text-red-600" />
-              )}
-              <span className={trend.isPositive ? 'text-emerald-600' : 'text-red-600'}>
-                {trend.value}
-              </span>
-              <span className="text-muted-foreground">{trend.label}</span>
-            </div>
-          )}
+          <div className="flex items-center min-h-4 gap-1 text-xs">
+            {trend && (
+              <>
+                {trend.isPositive ? (
+                  <TrendingUp className="size-3 text-emerald-600" />
+                ) : (
+                  <TrendingDown className="size-3 text-red-600" />
+                )}
+                <span className={trend.isPositive ? 'text-emerald-600' : 'text-red-600'}>
+                  {trend.value}
+                </span>
+                <span className="text-muted-foreground">{trend.label}</span>
+              </>
+            )}
+          </div>
         </CardContent>
       </Card>
     </motion.div>

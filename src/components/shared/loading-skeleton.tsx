@@ -32,10 +32,14 @@ export const CardSkeleton = () => {
   );
 };
 
-export const StatsRowSkeleton = () => {
+export const StatsRowSkeleton = ({ count = 4 }: { count?: number } = {}) => {
+  const colsClass =
+    count === 5
+      ? 'grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5'
+      : 'grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4';
   return (
-    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      {Array.from({ length: 4 }).map((_, i) => (
+    <div className={`grid ${colsClass}`}>
+      {Array.from({ length: count }).map((_, i) => (
         <CardSkeleton key={i} />
       ))}
     </div>

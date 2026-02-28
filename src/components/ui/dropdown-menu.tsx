@@ -104,10 +104,12 @@ function DropdownMenuHighlight({
   return (
     <Highlight
       data-slot="dropdown-menu-highlight"
+      mode="parent"
       click={false}
       controlledItems
       transition={transition}
       value={highlightedValue}
+      exitDelay={0}
       {...props}
     />
   )
@@ -188,7 +190,7 @@ function DropdownMenuContent({
               )}
               {...props}
             >
-              <DropdownMenuHighlight className="absolute inset-0 bg-accent z-0 rounded-sm">
+              <DropdownMenuHighlight className="bg-accent rounded-sm">
                 {children}
               </DropdownMenuHighlight>
             </motion.div>

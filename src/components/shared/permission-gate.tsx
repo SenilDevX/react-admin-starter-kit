@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { usePermissions } from '@/hooks/use-permissions';
 
 type PermissionGateProps = {
-  permission: string;
+  permission: string | string[];
   children: ReactNode;
   fallback?: ReactNode;
 };

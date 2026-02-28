@@ -197,6 +197,10 @@ function TabsContent({
   children,
   value,
   forceMount,
+  onDrag: _onDrag,
+  onDragEnd: _onDragEnd,
+  onDragStart: _onDragStart,
+  onAnimationStart: _onAnimationStart,
   ...props
 }: React.ComponentProps<typeof TabsPrimitive.Content>) {
   const insideContents = React.useContext(TabsContentsContext)

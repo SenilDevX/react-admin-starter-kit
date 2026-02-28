@@ -3,8 +3,83 @@
 import * as React from "react"
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react"
 import { Select as SelectPrimitive } from "radix-ui"
+import { AnimatePresence, motion } from "motion/react"
 
 import { cn } from "@/lib/utils"
+
+// --- Highlight ---
+
+type Bounds = {
+  top: number
+  left: number
+  width: number
+  height: number
+}
+
+function SelectHighlight({ children }: { children: React.ReactNode }) {
+  const containerRef = React.useRef<HTMLDivElement>(null)
+  const [bounds, setBounds] = React.useState<Bounds | null>(null)
+
+  React.useEffect(() => {
+    const container = containerRef.current
+    if (!container) return
+
+    const updateHighlight = () => {
+      const highlighted = container.querySelector("[data-highlighted]")
+      if (highlighted) {
+        const containerRect = container.getBoundingClientRect()
+        const itemRect = highlighted.getBoundingClientRect()
+        setBounds({
+          top: itemRect.top - containerRect.top,
+          left: itemRect.left - containerRect.left,
+          width: itemRect.width,
+          height: itemRect.height,
+        })
+      } else {
+        setBounds(null)
+      }
+    }
+
+    const observer = new MutationObserver(updateHighlight)
+    observer.observe(container, {
+      attributes: true,
+      attributeFilter: ["data-highlighted"],
+      subtree: true,
+    })
+
+    updateHighlight()
+
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <div ref={containerRef} style={{ position: "relative" }}>
+      <AnimatePresence initial={false}>
+        {bounds && (
+          <motion.div
+            key="select-highlight"
+            data-slot="select-highlight"
+            style={{ position: "absolute", zIndex: 0 }}
+            className="bg-accent rounded-sm"
+            initial={false}
+            animate={{
+              top: bounds.top,
+              left: bounds.left,
+              width: bounds.width,
+              height: bounds.height,
+              opacity: 1,
+            }}
+            exit={{ opacity: 0 }}
+            transition={{ type: "spring", stiffness: 350, damping: 35 }}
+          />
+        )}
+      </AnimatePresence>
+      {children}
+    </div>
+  )
+}
+
+// --- Root ---
 
 function Select({
   ...props
@@ -12,17 +87,23 @@ function Select({
   return <SelectPrimitive.Root data-slot="select" {...props} />
 }
 
+// --- Group ---
+
 function SelectGroup({
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Group>) {
   return <SelectPrimitive.Group data-slot="select-group" {...props} />
 }
 
+// --- Value ---
+
 function SelectValue({
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Value>) {
   return <SelectPrimitive.Value data-slot="select-value" {...props} />
 }
+
+// --- Trigger ---
 
 function SelectTrigger({
   className,
@@ -49,6 +130,8 @@ function SelectTrigger({
     </SelectPrimitive.Trigger>
   )
 }
+
+// --- Content ---
 
 function SelectContent({
   className,
@@ -79,13 +162,15 @@ function SelectContent({
               "h-[var(--radix-select-trigger-height)] w-full min-w-[var(--radix-select-trigger-width)] scroll-my-1"
           )}
         >
-          {children}
+          <SelectHighlight>{children}</SelectHighlight>
         </SelectPrimitive.Viewport>
         <SelectScrollDownButton />
       </SelectPrimitive.Content>
     </SelectPrimitive.Portal>
   )
 }
+
+// --- Label ---
 
 function SelectLabel({
   className,
@@ -100,6 +185,8 @@ function SelectLabel({
   )
 }
 
+// --- Item ---
+
 function SelectItem({
   className,
   children,
@@ -109,7 +196,7 @@ function SelectItem({
     <SelectPrimitive.Item
       data-slot="select-item"
       className={cn(
-        "focus:bg-accent focus:text-accent-foreground [&_svg:not([class*='text-'])]:text-muted-foreground relative flex w-full cursor-default items-center gap-2 rounded-sm py-1.5 pr-8 pl-2 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2",
+        "data-[highlighted]:text-accent-foreground [&_svg:not([class*='text-'])]:text-muted-foreground relative z-[1] flex w-full cursor-default items-center gap-2 rounded-sm py-1.5 pr-8 pl-2 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2",
         className
       )}
       {...props}
@@ -127,6 +214,8 @@ function SelectItem({
   )
 }
 
+// --- Separator ---
+
 function SelectSeparator({
   className,
   ...props
@@ -139,6 +228,8 @@ function SelectSeparator({
     />
   )
 }
+
+// --- Scroll Buttons ---
 
 function SelectScrollUpButton({
   className,

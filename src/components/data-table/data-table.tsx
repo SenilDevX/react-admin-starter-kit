@@ -158,7 +158,11 @@ export const DataTable = <TData, TValue>({
                   className={onRowClick ? 'cursor-pointer focus-visible:bg-muted/50 focus-visible:outline-none' : undefined}
                   tabIndex={onRowClick ? 0 : undefined}
                   role={onRowClick ? 'button' : undefined}
-                  onClick={onRowClick ? () => onRowClick(row.original) : undefined}
+                  onClick={onRowClick ? (e) => {
+                    const target = e.target as HTMLElement;
+                    if (target.closest('button, a, input, [role="menuitem"], [role="checkbox"], [data-radix-collection-item]')) return;
+                    onRowClick(row.original);
+                  } : undefined}
                   onKeyDown={onRowClick ? (e) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();

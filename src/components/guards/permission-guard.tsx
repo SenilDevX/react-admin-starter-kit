@@ -6,7 +6,7 @@ export const PermissionGuard = ({
   permission,
   children,
 }: {
-  permission: string;
+  permission: string | string[];
   children: ReactNode;
 }) => {
   const { hasPermission } = usePermissions();

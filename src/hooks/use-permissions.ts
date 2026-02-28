@@ -6,7 +6,7 @@ export const usePermissions = () => {
   const { user } = useAuthStore();
 
   const check = useCallback(
-    (permission: string) => hasPermission(user, permission),
+    (permission: string | string[]) => hasPermission(user, permission),
     [user],
   );
 

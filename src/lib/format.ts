@@ -48,3 +48,9 @@ export const formatDateShort = (date: Date): string =>
     month: 'short',
     day: 'numeric',
   }).format(date);
+
+export const humanize = (str: string) => {
+  return str
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, (c) => c.toUpperCase());
+};
